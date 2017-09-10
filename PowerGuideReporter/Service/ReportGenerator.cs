@@ -2,7 +2,7 @@
 using NodaTime;
 using PowerGuideReporter.Data;
 using PowerGuideReporter.Injection;
-using PowerGuideReporter.Service.Remote.Measurement;
+using PowerGuideReporter.Remote.PowerGuide.Service;
 
 namespace PowerGuideReporter.Service
 {

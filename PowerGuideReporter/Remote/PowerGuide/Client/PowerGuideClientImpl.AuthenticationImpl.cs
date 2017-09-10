@@ -8,9 +8,8 @@ using AngleSharp.Dom.Html;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PowerGuideReporter.Data.Marshal;
-using PowerGuideReporter.Service.Remote.Auth;
 
-namespace PowerGuideReporter.Service.Remote
+namespace PowerGuideReporter.Remote.PowerGuide.Client
 {
     public interface Authentication
     {

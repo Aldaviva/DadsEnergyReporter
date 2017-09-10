@@ -1,4 +1,4 @@
-﻿namespace PowerGuideReporter.Service.Remote.Measurement
+﻿namespace PowerGuideReporter.Data
 {
     public class Measurement
     {

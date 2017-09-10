@@ -3,15 +3,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using NodaTime;
 using PowerGuideReporter.Data.Marshal;
-using PowerGuideReporter.Service.Remote.Auth;
 
-namespace PowerGuideReporter.Service.Remote
+namespace PowerGuideReporter.Remote.PowerGuide.Client
 {
     public interface Measurements
     {
         Task<MeasurementsResponse> FetchMeasurements(Guid installationGuid, ZonedDateTime startTime,
             ZonedDateTime endTime);
-        Task<Guid> FetchInstallationId();
     }
 
     internal partial class PowerGuideClientImpl
@@ -45,25 +43,6 @@ namespace PowerGuideReporter.Service.Remote
                 catch (HttpRequestException e)
                 {
                     throw new PowerGuideException("Failed to get solar output measurements", e);
-                }
-            }
-
-            public async Task<Guid> FetchInstallationId()
-            {
-                UriBuilder uri = ApiRoot;
-                uri.Path += "installations";
-
-                try
-                {
-                    using (HttpResponseMessage response = await HttpClient.GetAsync(uri.Uri))
-                    {
-                        InstallationsResponse installationsResponse = await ReadContentJsonAs<InstallationsResponse>(response.EnsureSuccessStatusCode());
-                        return installationsResponse.Data[0].Guid;
-                    }
-                }
-                catch (HttpRequestException e)
-                {
-                    throw new PowerGuideException("Failed to fetch installation ID of the solar panels at the house", e);
                 }
             }
         }

@@ -1,0 +1,190 @@
+﻿{
+    "Measurements": [
+        {
+            "Timestamp": "2017-07-17T00:00:00",
+            "CumulativekWh": 5979.32,
+            "EnergyInIntervalkWh": 47.38,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-18T00:00:00",
+            "CumulativekWh": 6022.22,
+            "EnergyInIntervalkWh": 42.90,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-19T00:00:00",
+            "CumulativekWh": 6089.94,
+            "EnergyInIntervalkWh": 67.72,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-20T00:00:00",
+            "CumulativekWh": 6146.78,
+            "EnergyInIntervalkWh": 56.84,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-21T00:00:00",
+            "CumulativekWh": 6210.45,
+            "EnergyInIntervalkWh": 63.67,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-22T00:00:00",
+            "CumulativekWh": 6255.35,
+            "EnergyInIntervalkWh": 44.90,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-23T00:00:00",
+            "CumulativekWh": 6289.39,
+            "EnergyInIntervalkWh": 34.04,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-24T00:00:00",
+            "CumulativekWh": 6309.90,
+            "EnergyInIntervalkWh": 20.50,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-25T00:00:00",
+            "CumulativekWh": 6330.13,
+            "EnergyInIntervalkWh": 20.23,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-26T00:00:00",
+            "CumulativekWh": 6369.44,
+            "EnergyInIntervalkWh": 39.30,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-27T00:00:00",
+            "CumulativekWh": 6392.28,
+            "EnergyInIntervalkWh": 22.84,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-28T00:00:00",
+            "CumulativekWh": 6433.78,
+            "EnergyInIntervalkWh": 41.50,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-29T00:00:00",
+            "CumulativekWh": 6491.31,
+            "EnergyInIntervalkWh": 57.53,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-30T00:00:00",
+            "CumulativekWh": 6558.46,
+            "EnergyInIntervalkWh": 67.15,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-07-31T00:00:00",
+            "CumulativekWh": 6621.15,
+            "EnergyInIntervalkWh": 62.69,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-01T00:00:00",
+            "CumulativekWh": 6682.22,
+            "EnergyInIntervalkWh": 61.07,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-02T00:00:00",
+            "CumulativekWh": 6725.82,
+            "EnergyInIntervalkWh": 43.60,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-03T00:00:00",
+            "CumulativekWh": 6781.52,
+            "EnergyInIntervalkWh": 55.70,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-04T00:00:00",
+            "CumulativekWh": 6827.29,
+            "EnergyInIntervalkWh": 45.77,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-05T00:00:00",
+            "CumulativekWh": 6861.90,
+            "EnergyInIntervalkWh": 34.61,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-06T00:00:00",
+            "CumulativekWh": 6903.75,
+            "EnergyInIntervalkWh": 41.85,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-07T00:00:00",
+            "CumulativekWh": 6908.84,
+            "EnergyInIntervalkWh": 5.09,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-08T00:00:00",
+            "CumulativekWh": 6947.71,
+            "EnergyInIntervalkWh": 38.87,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-09T00:00:00",
+            "CumulativekWh": 7008.82,
+            "EnergyInIntervalkWh": 61.11,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-10T00:00:00",
+            "CumulativekWh": 7066.45,
+            "EnergyInIntervalkWh": 57.63,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-11T00:00:00",
+            "CumulativekWh": 7097.54,
+            "EnergyInIntervalkWh": 31.09,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-12T00:00:00",
+            "CumulativekWh": 7146.00,
+            "EnergyInIntervalkWh": 48.46,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-13T00:00:00",
+            "CumulativekWh": 7195.87,
+            "EnergyInIntervalkWh": 49.87,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-14T00:00:00",
+            "CumulativekWh": 7228.84,
+            "EnergyInIntervalkWh": 32.97,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-15T00:00:00",
+            "CumulativekWh": 7242.84,
+            "EnergyInIntervalkWh": 14.00,
+            "DataStatus": "Validated"
+        },
+        {
+            "Timestamp": "2017-08-16T00:00:00",
+            "CumulativekWh": 7293.28,
+            "EnergyInIntervalkWh": 50.44,
+            "DataStatus": "Validated"
+        }
+    ], "TotalEnergyInIntervalkWh": 1361.32
+}

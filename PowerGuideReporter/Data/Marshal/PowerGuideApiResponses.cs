@@ -6,7 +6,7 @@ namespace PowerGuideReporter.Data.Marshal
 {
     public class Measurement
     {
-        public Instant Timestamp { get; set; }
+        public LocalDateTime Timestamp { get; set; }
         public double CumulativekWh { get; set; }
         public double EnergyInIntervalkWh { get; set; }
         public DataStatus DataStatus { get; set; }

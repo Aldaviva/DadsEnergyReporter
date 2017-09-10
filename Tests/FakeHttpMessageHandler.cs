@@ -9,9 +9,9 @@ namespace PowerGuideReporter
         protected sealed override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            return FakeSendAsync(request);
+            return SendAsync(request);
         }
 
-        public abstract Task<HttpResponseMessage> FakeSendAsync(HttpRequestMessage request);
+        public abstract Task<HttpResponseMessage> SendAsync(HttpRequestMessage request);
     }
 }

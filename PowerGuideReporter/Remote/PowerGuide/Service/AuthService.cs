@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using PowerGuideReporter.Data.Marshal;
 using PowerGuideReporter.Injection;
+using PowerGuideReporter.Remote.PowerGuide.Client;
 
-namespace PowerGuideReporter.Service.Remote.Auth
+namespace PowerGuideReporter.Remote.PowerGuide.Service
 {
     internal interface AuthService
     {

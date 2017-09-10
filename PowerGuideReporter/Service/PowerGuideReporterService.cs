@@ -2,8 +2,10 @@
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using PowerGuideReporter.Data;
+using PowerGuideReporter.Data.Marshal;
 using PowerGuideReporter.Injection;
-using PowerGuideReporter.Service.Remote.Auth;
+using PowerGuideReporter.Properties;
+using PowerGuideReporter.Remote.PowerGuide.Service;
 
 namespace PowerGuideReporter.Service
 {
@@ -21,6 +23,7 @@ namespace PowerGuideReporter.Service
 
         public PowerGuideReporterServiceImpl(ReportGenerator reportGenerator, EmailSender emailSender, AuthService authService)
         {
+            JsonSerializerConfigurer.ConfigureDefault();
             _reportGenerator = reportGenerator;
             _emailSender = emailSender;
             this.authService = authService;
@@ -28,7 +31,7 @@ namespace PowerGuideReporter.Service
 
         public async Task Start()
         {
-            Properties.Settings settings = Properties.Settings.Default;
+            Settings settings = Settings.Default;
             if (settings.username.Length != 0 && settings.password.Length != 0)
             {
                 authService.Username = settings.username;

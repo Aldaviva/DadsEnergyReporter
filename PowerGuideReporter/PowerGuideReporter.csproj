@@ -13,6 +13,21 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -64,6 +79,9 @@
     <Reference Include="NodaTime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
       <HintPath>..\packages\NodaTime.2.2.0\lib\net45\NodaTime.dll</HintPath>
     </Reference>
+    <Reference Include="NodaTime.Serialization.JsonNet, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NodaTime.Serialization.JsonNet.2.0.0\lib\net45\NodaTime.Serialization.JsonNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
@@ -76,6 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Marshal\JsonSerializerConfigurer.cs" />
     <Compile Include="Data\Marshal\PowerGuideApiResponses.cs" />
     <Compile Include="Injection\ContainerFactory.cs" />
     <Compile Include="Injection\AutowiredAttribute.cs" />
@@ -93,17 +112,18 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Service\Remote\Auth\PowerGuideException.cs" />
-    <Compile Include="Service\Remote\HttpClientExtensions.cs" />
-    <Compile Include="Service\Remote\Measurement\Measurement.cs" />
-    <Compile Include="Service\Remote\Measurement\MeasurementService.cs" />
-    <Compile Include="Service\Remote\Auth\AuthService.cs" />
+    <Compile Include="Remote\PowerGuide\PowerGuideException.cs" />
+    <Compile Include="Remote\PowerGuide\Service\InstallationService.cs" />
+    <Compile Include="Data\Measurement.cs" />
+    <Compile Include="Remote\PowerGuide\Service\MeasurementService.cs" />
+    <Compile Include="Remote\PowerGuide\Service\AuthService.cs" />
     <Compile Include="Service\EmailSender.cs" />
     <Compile Include="Service\PowerGuideReporterService.cs" />
     <Compile Include="Data\Report.cs" />
-    <Compile Include="Service\Remote\PowerGuideClient.cs" />
-    <Compile Include="Service\Remote\PowerGuideClientImpl.AuthenticationImpl.cs" />
-    <Compile Include="Service\Remote\PowerGuideClientImpl.MeasurementsImpl.cs" />
+    <Compile Include="Remote\PowerGuide\Client\PowerGuideClient.cs" />
+    <Compile Include="Remote\PowerGuide\Client\PowerGuideClientImpl.AuthenticationImpl.cs" />
+    <Compile Include="Remote\PowerGuide\Client\PowerGuideClientImpl.InstallationsImpl.cs" />
+    <Compile Include="Remote\PowerGuide\Client\PowerGuideClientImpl.MeasurementsImpl.cs" />
     <Compile Include="Service\ReportGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,8 +143,18 @@
   <ItemGroup>
     <Compile Include="Injection\ComponentAttribute.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Tests\" />
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

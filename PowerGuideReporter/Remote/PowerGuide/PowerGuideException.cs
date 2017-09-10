@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace PowerGuideReporter.Service.Remote.Auth
+namespace PowerGuideReporter.Remote.PowerGuide
 {
     [Serializable]
     internal class PowerGuideException : Exception

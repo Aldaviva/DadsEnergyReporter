@@ -11,35 +11,36 @@ using NodaTime;
 using NodaTime.Text;
 using PowerGuideReporter.Injection;
 
-namespace PowerGuideReporter.Service.Remote
+namespace PowerGuideReporter.Remote.PowerGuide.Client
 {
     public interface PowerGuideClient
     {
         Measurements Measurements { get; }
         Authentication Authentication { get; }
+        Installations Installations { get; }
     }
 
     [Component]
     internal partial class PowerGuideClientImpl : PowerGuideClient
     {
-        protected readonly HttpClient HttpClient;
-        protected readonly CookieContainer Cookies;
-//        protected readonly IRestClient HttpClient;
+        private readonly HttpClient httpClient;
+        private readonly CookieContainer cookies;
 
         public Measurements Measurements { get; }
+        public Installations Installations { get; }
         public Authentication Authentication { get; }
         internal IResponseReaders ResponseReaders { get; set; }
-        
+
         private static readonly ZonedDateTimePattern ISO8601_NO_ZONE_NO_MILLIS_PATTERN = ZonedDateTimePattern.CreateWithCurrentCulture("uuuu-MM-ddTHH:mm:ss", null);
-        protected static UriBuilder ApiRoot => new UriBuilder("https", "mysolarcity.com", 443, "/solarcity-api/powerguide/v1.0/");
+        private static UriBuilder ApiRoot => new UriBuilder("https", "mysolarcity.com", 443, "/solarcity-api/powerguide/v1.0/");
 
         public PowerGuideClientImpl(HttpClient httpClient, CookieContainer cookies)
         {
-            HttpClient = httpClient;
-            Cookies = cookies;
-//            this.HttpClient = httpClient;
+            this.httpClient = httpClient;
+            this.cookies = cookies;
 
             Measurements = new MeasurementsImpl(this);
+            Installations = new InstallationsImpl(this);
             Authentication = new AuthenticationImpl(this);
         }
 
@@ -54,7 +55,7 @@ namespace PowerGuideReporter.Service.Remote
         {
             private static readonly JsonSerializer JSON_SERIALIZER = JsonSerializer.CreateDefault();
             private static readonly HtmlParser HTML_PARSER = new HtmlParser();
-            
+
             public async Task<T> ReadContentJsonAs<T>(HttpResponseMessage response)
             {
                 response.EnsureSuccessStatusCode();
@@ -92,10 +93,8 @@ namespace PowerGuideReporter.Service.Remote
         protected abstract class Resource : IResponseReaders
         {
             private PowerGuideClientImpl Client { get; }
-
-//            protected IRestClient HttpClient => Client.HttpClient;
-            protected HttpClient HttpClient => Client.HttpClient;
-            protected CookieContainer Cookies => Client.Cookies;
+            protected HttpClient HttpClient => Client.httpClient;
+            protected CookieContainer Cookies => Client.cookies;
 
             protected Resource(PowerGuideClientImpl client)
             {
