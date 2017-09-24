@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PowerGuideReporter
+namespace DadsEnergyReporter
 {
     public abstract class FakeHttpMessageHandler: HttpMessageHandler
     {

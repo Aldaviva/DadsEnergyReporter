@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<!-- This file was downloaded on September 10, 2017. -->
+<atom:feed xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ns="http://naesb.org/espi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> <!-- Ben: added xmlns:xsi and xsi:schemaLocation -->
+  <atom:id>urn:uuid:b7cf21a8-d56d-4bb0-8e97-5bd0708b5b9c</atom:id>
+  <atom:link href="/ThirdParty/83e269c1/Batch" rel="self" />
+  <atom:title>ThirdPartyX Batch Feed</atom:title>
+  <atom:updated>2017-09-11T01:16:49Z</atom:updated>
+  <atom:entry>
+    <atom:content>
+      <ns:UsagePoint xmlns:ns="http://naesb.org/espi">
+        <ns:ServiceCategory>
+          <ns:kind>0</ns:kind>
+        </ns:ServiceCategory>
+      </ns:UsagePoint>
+    </atom:content>
+    <atom:id>urn:uuid:6d2c4c23-09f8-478c-96b2-5bbc7e71596d</atom:id>
+    <atom:link href="/User/My/UsagePoint/01" rel="self" />
+    <atom:link href="/User/My/UsagePoint" rel="up" />
+    <atom:link href="/User/My/UsagePoint/01/MeterReading" rel="related" />
+    <atom:link href="/User/My/UsagePoint/01/ElectricPowerUsageSummary" rel="related" />
+    <atom:link href="LocalTimeParameters/01" rel="related" />
+    <atom:published>2017-09-11T01:16:49</atom:published>
+    <atom:title>1 ROAD RD, (SOLAR POWER),CITY,ST,12345</atom:title>
+    <atom:updated>2017-09-11T01:16:49</atom:updated>
+  </atom:entry>
+  <atom:entry>
+    <atom:content>
+      <ns:LocalTimeParameters xmlns:ns="http://naesb.org/espi">
+        <ns:dstEndRule>B40E2000</ns:dstEndRule>
+        <ns:dstOffset>3600</ns:dstOffset>
+        <ns:dstStartRule>360E2000</ns:dstStartRule>
+        <ns:tzOffset>-18000</ns:tzOffset>
+      </ns:LocalTimeParameters>
+    </atom:content>
+    <atom:id>urn:uuid:14285bfe-75c7-48ca-b51d-f3d2014f0c52</atom:id>
+    <atom:link href="LocalTimeParameters/01" rel="self" />
+    <atom:link href="LocalTimeParameters" rel="up" />
+    <atom:title>DST For North America</atom:title>
+    <atom:published>2017-09-11T01:16:49</atom:published>
+    <atom:updated>2017-09-11T01:16:49</atom:updated>
+  </atom:entry>
+  <atom:entry>
+    <atom:content>
+      <ns:MeterReading xmlns:ns="http://naesb.org/espi" />
+    </atom:content>
+    <atom:id>urn:uuid:a853f227-623c-426b-ad59-4ed2520ef933</atom:id>
+    <atom:link href="/User/My/UsagePoint/01/MeterReading/01" rel="self" />
+    <atom:link href="/User/My/UsagePoint/01/MeterReading" rel="up" />
+    <atom:link href="/User/My/UsagePoint/01/MeterReading/01/IntervalBlock" rel="related" />
+    <atom:link href="/ReadingType/07" rel="related" />
+    <atom:published>2017-09-11T01:16:49</atom:published>
+    <atom:title>Monthly Electricity Consumption</atom:title>
+    <atom:updated>2017-09-11T01:16:49</atom:updated>
+  </atom:entry>
+  <atom:entry>
+    <atom:content>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2592000</ns:duration>
+          <ns:start>1500264000</ns:start> <!-- Monday July 17, 2017 -->
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>2048000</ns:cost> <!-- $20.48 -->
+          <ns:timePeriod>
+            <ns:duration>2592000</ns:duration>
+            <ns:start>1500264000</ns:start> <!-- Monday July 17, 2017 -->
+          </ns:timePeriod>
+          <ns:value>0</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2764800</ns:duration>
+          <ns:start>1497499200</ns:start> <!-- Thursday June 15, 2017 -->
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>6163000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2764800</ns:duration>
+            <ns:start>1497499200</ns:start> <!-- Thursday June 15, 2017 -->
+          </ns:timePeriod>
+          <ns:value>275</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2505600</ns:duration>
+          <ns:start>1494993600</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>3052000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2505600</ns:duration>
+            <ns:start>1494993600</ns:start>
+          </ns:timePeriod>
+          <ns:value>68</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2592000</ns:duration>
+          <ns:start>1492401600</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>5125000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2592000</ns:duration>
+            <ns:start>1492401600</ns:start>
+          </ns:timePeriod>
+          <ns:value>207</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2678400</ns:duration>
+          <ns:start>1489723200</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>5023000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2678400</ns:duration>
+            <ns:start>1489723200</ns:start>
+          </ns:timePeriod>
+          <ns:value>200</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2415600</ns:duration>
+          <ns:start>1487307600</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>12336000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2415600</ns:duration>
+            <ns:start>1487307600</ns:start>
+          </ns:timePeriod>
+          <ns:value>694</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2505600</ns:duration>
+          <ns:start>1484802000</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>19514000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2505600</ns:duration>
+            <ns:start>1484802000</ns:start>
+          </ns:timePeriod>
+          <ns:value>1176</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2678400</ns:duration>
+          <ns:start>1482123600</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>24126000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2678400</ns:duration>
+            <ns:start>1482123600</ns:start>
+          </ns:timePeriod>
+          <ns:value>1496</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2764800</ns:duration>
+          <ns:start>1479358800</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>25014000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2764800</ns:duration>
+            <ns:start>1479358800</ns:start>
+          </ns:timePeriod>
+          <ns:value>1527</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2595600</ns:duration>
+          <ns:start>1476763200</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>22181000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2595600</ns:duration>
+            <ns:start>1476763200</ns:start>
+          </ns:timePeriod>
+          <ns:value>1345</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2419200</ns:duration>
+          <ns:start>1474344000</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>18282000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2419200</ns:duration>
+            <ns:start>1474344000</ns:start>
+          </ns:timePeriod>
+          <ns:value>1069</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2937600</ns:duration>
+          <ns:start>1471406400</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>23982000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2937600</ns:duration>
+            <ns:start>1471406400</ns:start>
+          </ns:timePeriod>
+          <ns:value>1377</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+      <ns:IntervalBlock xmlns:ns="http://naesb.org/espi">
+        <ns:interval>
+          <ns:duration>2592000</ns:duration>
+          <ns:start>1468814400</ns:start>
+        </ns:interval>
+        <ns:IntervalReading>
+          <ns:cost>21934000</ns:cost>
+          <ns:timePeriod>
+            <ns:duration>2592000</ns:duration>
+            <ns:start>1468814400</ns:start>
+          </ns:timePeriod>
+          <ns:value>1243</ns:value>
+        </ns:IntervalReading>
+      </ns:IntervalBlock>
+    </atom:content>
+    <atom:id>urn:uuid:b512aa33-e87d-4099-a3fd-333fde8b68fb</atom:id>
+    <atom:link href="/User/My/UsagePoint/01/MeterReading/01/IntervalBlock/01" rel="self" />
+    <atom:link href="/User/My/UsagePoint/01/MeterReading/01/IntervalBlock" rel="up" />
+    <atom:published>2017-09-11T01:16:49</atom:published>
+    <atom:title />
+    <atom:updated>2017-09-11T01:16:49</atom:updated>
+  </atom:entry>
+  <atom:entry>
+    <atom:content>
+      <ns:ReadingType xmlns:ns="http://naesb.org/espi">
+        <ns:accumulationBehaviour>4</ns:accumulationBehaviour>
+        <ns:commodity>1</ns:commodity>
+        <ns:currency>840</ns:currency>
+        <ns:dataQualifier>12</ns:dataQualifier>
+        <ns:flowDirection>1</ns:flowDirection>
+        <ns:intervalLength>2678400</ns:intervalLength>
+        <ns:kind>12</ns:kind>
+        <ns:phase>0</ns:phase>
+        <ns:powerOfTenMultiplier>3</ns:powerOfTenMultiplier>
+        <ns:timeAttribute>0</ns:timeAttribute>
+        <ns:uom>72</ns:uom>
+      </ns:ReadingType>
+    </atom:content>
+    <atom:id>urn:uuid:effb68ef-dfcf-4008-bae9-031428519c28</atom:id>
+    <atom:link href="/ReadingType/07" rel="self" />
+    <atom:link href="/ReadingType" rel="up" />
+    <atom:published>2017-09-11T01:16:49</atom:published>
+    <atom:title>Energy Delivered (kWh)</atom:title>
+    <atom:updated>2017-09-11T01:16:49</atom:updated>
+  </atom:entry>
+  <atom:entry>
+    <atom:content>
+      <ns:ElectricPowerUsageSummary xmlns:ns="http://naesb.org/espi">
+        <ns:billingPeriod>
+          <ns:duration>34045200</ns:duration>
+          <ns:start>1468814400</ns:start> <!-- Monday July 18, 2016 -->
+        </ns:billingPeriod>
+        <ns:billToDate>188780000</ns:billToDate> <!-- $1,887.80 -->
+        <ns:currency>840</ns:currency>
+        <ns:currentBillingPeriodOverAllConsumption>
+          <ns:powerOfTenMultiplier>3</ns:powerOfTenMultiplier>
+          <ns:timeStamp>1502856000</ns:timeStamp> <!-- Wednesday August 16, 2017 -->
+          <ns:uom>72</ns:uom>
+          <ns:value>10677</ns:value>
+        </ns:currentBillingPeriodOverAllConsumption>
+        <ns:qualityOfReading>14</ns:qualityOfReading>
+        <ns:statusTimeStamp>1502856000</ns:statusTimeStamp> <!-- Wednesday August 16, 2017 -->
+      </ns:ElectricPowerUsageSummary>
+    </atom:content>
+    <atom:id>urn:uuid:c041fb8d-cab9-4d9d-a8fa-5c107f1474fa</atom:id>
+    <atom:link href="User/My/ElectricPowerUsageSummary/01" rel="self" />
+    <atom:link href="/User/My/UsagePoint/01/ElectricPowerUsageSummary" rel="up" />
+    <atom:published>2017-09-11T01:16:49</atom:published>
+    <atom:title>Usage Summary</atom:title>
+    <atom:updated>2017-09-11T01:16:49</atom:updated>
+  </atom:entry>
+</atom:feed>

@@ -2,7 +2,7 @@
 using NodaTime;
 using Xunit;
 
-namespace PowerGuideReporter.Service
+namespace DadsEnergyReporter.Service
 {
     public class ReportGeneratorTest
     {
