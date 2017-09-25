@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data.Marshal;
@@ -6,26 +7,26 @@ using DadsEnergyReporter.Remote.Common;
 
 namespace DadsEnergyReporter.Remote.PowerGuide.Client
 {
-    public interface Installations
+    public interface InstallationClient
     {
-        Task<Guid> FetchInstallationId();
+        Task<IEnumerable<Installation>> FetchInstallations();
     }
 
-    internal class InstallationsImpl : AbstractResource, Installations
+    internal class InstallationClientImpl : AbstractResource, InstallationClient
     {
-        public InstallationsImpl(PowerGuideClientImpl client) : base(client.ApiClient) { }
+        public InstallationClientImpl(PowerGuideClientImpl client) : base(client.ApiClient) { }
 
-        public async Task<Guid> FetchInstallationId()
+        public async Task<IEnumerable<Installation>> FetchInstallations()
         {
-            UriBuilder uri = PowerGuideClientImpl.ApiRoot;
-            uri.Path += "installations";
+            UriBuilder uri = PowerGuideClientImpl.ApiRoot
+                .WithPathSegment("installations");
 
             try
             {
                 using (HttpResponseMessage response = await HttpClient.GetAsync(uri.Uri))
                 {
                     InstallationsResponse installationsResponse = await ReadContentJsonAs<InstallationsResponse>(response);
-                    return installationsResponse.Data[0].Guid;
+                    return installationsResponse.Data;
                 }
             }
             catch (HttpRequestException e)

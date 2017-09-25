@@ -138,7 +138,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
             Func<Task> thrower = async () => await client.SubmitCredentials("user", "pass", new Dictionary<string, string>());
 
             thrower.ShouldThrow<OrangeRocklandException>().WithMessage(
-                "No LogCOOKPl95FnjAT cookie was set after submitting credentials, username or password may be incorrect.");
+                "Auth Phase 2/2: No LogCOOKPl95FnjAT cookie was set after submitting credentials, username or password may be incorrect.");
         }
         
         [Fact]

@@ -32,8 +32,8 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 
         public async Task LogOut()
         {
-            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot;
-            uri.Path += "logoff.aspx";
+            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot
+                .WithPathSegment("logoff.aspx");
 
             try
             {
@@ -50,8 +50,8 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 
         public async Task<IDictionary<string, string>> FetchPreLogInData()
         {
-            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot;
-            uri.Path += "login.aspx";
+            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot
+                .WithPathSegment("login.aspx");
 
             try
             {
@@ -72,8 +72,8 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         public async Task<OrangeRocklandAuthToken> SubmitCredentials(string username, string password,
             IDictionary<string, string> preLogInData)
         {
-            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot;
-            uri.Path += "login.aspx";
+            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot
+                .WithPathSegment("login.aspx");
 
             var formValues = new List<KeyValuePair<string, string>>
             {
@@ -93,7 +93,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
                     if (logInCookie == null)
                     {
                         throw new OrangeRocklandException(
-                            "No LogCOOKPl95FnjAT cookie was set after submitting credentials, username or password may be incorrect.");
+                            "Auth Phase 2/2: No LogCOOKPl95FnjAT cookie was set after submitting credentials, username or password may be incorrect.");
                     }
 
                     return new OrangeRocklandAuthToken { LogInCookie = logInCookie.Value };

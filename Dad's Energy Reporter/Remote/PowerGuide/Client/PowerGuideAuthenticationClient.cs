@@ -12,7 +12,7 @@ using Newtonsoft.Json.Linq;
 
 namespace DadsEnergyReporter.Remote.PowerGuide.Client
 {
-    public interface Authentication
+    public interface PowerGuideAuthenticationClient
     {
         Task LogOut();
         Task<PreLogInData> FetchPreLogInData();
@@ -26,14 +26,16 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
     /**
      * OAuth API is only available for partners of SolarCity, so we're using web authentication instead
      */
-    internal class AuthenticationImpl : AbstractResource, Authentication
+    internal class PowerGuideAuthenticationClientImpl : AbstractResource, PowerGuideAuthenticationClient
     {
-        public AuthenticationImpl(PowerGuideClientImpl client) : base(client.ApiClient) { }
+        public PowerGuideAuthenticationClientImpl(PowerGuideClientImpl client) : base(client.ApiClient)
+        {
+        }
 
         public async Task LogOut()
         {
             UriBuilder requestUri = PowerGuideClientImpl.ApiRoot;
-            requestUri.Path = "/Logout.aspx";
+            requestUri.Path = "Logout.aspx";
 
             try
             {
@@ -62,9 +64,9 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
                     string decodedModelJson = WebUtility.HtmlDecode(modelJson);
                     var model = JsonConvert.DeserializeObject<JObject>(decodedModelJson);
 
-                    var siteUrl = new Uri((string)model["siteUrl"]);
-                    var logInUrl = new Uri(siteUrl, (string)model["loginUrl"]);
-                    string csrfToken = (string)model["antiForgery"]["value"];
+                    var siteUrl = new Uri((string) model["siteUrl"]);
+                    var logInUrl = new Uri(siteUrl, (string) model["loginUrl"]);
+                    string csrfToken = (string) model["antiForgery"]["value"];
 
                     return new PreLogInData
                     {
@@ -79,19 +81,21 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
             }
         }
 
-        public async Task<IDictionary<string, string>> SubmitCredentials(string username, string password, PreLogInData preLogInData)
+        public async Task<IDictionary<string, string>> SubmitCredentials(string username, string password,
+            PreLogInData preLogInData)
         {
             IEnumerable<KeyValuePair<string, string>> formValues = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("idsrv.xsrf", preLogInData.CsrfToken),
-                    new KeyValuePair<string, string>("username", username),
-                    new KeyValuePair<string, string>("password", password),
-                    new KeyValuePair<string, string>("RecaptchaResponse", string.Empty)
-                };
+            {
+                new KeyValuePair<string, string>("idsrv.xsrf", preLogInData.CsrfToken),
+                new KeyValuePair<string, string>("username", username),
+                new KeyValuePair<string, string>("password", password),
+                new KeyValuePair<string, string>("RecaptchaResponse", string.Empty)
+            };
 
             try
             {
-                using (HttpResponseMessage response = await HttpClient.PostAsync(preLogInData.LogInUri, new FormUrlEncodedContent(formValues)))
+                using (HttpResponseMessage response =
+                    await HttpClient.PostAsync(preLogInData.LogInUri, new FormUrlEncodedContent(formValues)))
                 using (IHtmlDocument html = await ReadContentAsHtml(response))
                 {
                     return html.QuerySelectorAll("input[name]").ToDictionary(
@@ -101,7 +105,8 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
             }
             catch (HttpRequestException e)
             {
-                throw new PowerGuideException("Auth Phase 2/3: Failed to log in with credentials, username or password may be incorrect.", e);
+                throw new PowerGuideException(
+                    "Auth Phase 2/3: Failed to log in with credentials, username or password may be incorrect.", e);
             }
         }
 
@@ -112,14 +117,16 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
 
             try
             {
-                using (HttpResponseMessage response = await HttpClient.PostAsync(requestUri.Uri, new FormUrlEncodedContent(credentialResponse.ToList())))
+                using (HttpResponseMessage response = await HttpClient.PostAsync(requestUri.Uri,
+                    new FormUrlEncodedContent(credentialResponse.ToList())))
                 {
                     response.EnsureSuccessStatusCode();
                     Cookie fedAuth = ApiClient.Cookies.GetCookies(requestUri.Uri)["FedAuth"];
 
                     if (fedAuth == null)
                     {
-                        throw new PowerGuideException($"No FedAuth cookie was set while fetching auth token from {requestUri.Uri}");
+                        throw new PowerGuideException(
+                            $"Auth Phase 3/3: No FedAuth cookie was set while fetching auth token from {requestUri.Uri}");
                     }
 
                     return new PowerGuideAuthToken { FedAuth = fedAuth.Value };
@@ -127,7 +134,8 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
             }
             catch (HttpRequestException e)
             {
-                throw new PowerGuideException("Auth Phase 3/3: Failed to fetch auth token based on credential response", e);
+                throw new PowerGuideException("Auth Phase 3/3: Failed to fetch auth token based on credential response",
+                    e);
             }
         }
     }

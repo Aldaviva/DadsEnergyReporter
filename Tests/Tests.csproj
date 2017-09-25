@@ -89,11 +89,18 @@
     <Compile Include="Remote\OrangeRockland\Service\AuthServiceTest.cs" />
     <Compile Include="Remote\OrangeRockland\Service\GreenButtonServiceTest.cs" />
     <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandServiceTest.cs" />
+    <Compile Include="Remote\PowerGuide\Client\InstallationsTest.cs" />
+    <Compile Include="Remote\PowerGuide\Client\MeasurementsTest.cs" />
+    <Compile Include="Remote\PowerGuide\Client\PowerGuideAuthenticationClientTest.cs" />
+    <Compile Include="Remote\PowerGuide\Client\PowerGuideClientTest.cs" />
     <Compile Include="Service\ReportGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Data\installations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Data\measurements.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -102,9 +109,6 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Remote\PowerGuide\Service\PowerGuideClientTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dad%27s Energy Reporter\Dad%27s Energy Reporter.csproj">
@@ -120,11 +124,19 @@
     <Content Include="Data\oru-login.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\solarcity-login.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\solarcity-submit-credentials.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Remote\PowerGuide\Service\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

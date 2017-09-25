@@ -31,10 +31,10 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
         {
             Guid installationId = await installationService.FetchInstallationId();
 
-            MeasurementsResponse measurementsResponse = await client.Measurements.FetchMeasurements(installationId, billingInterval.Start.AtStartOfDayInZone(REPORT_TIME_ZONE), billingInterval.End.AtStartOfDayInZone(REPORT_TIME_ZONE));
+            MeasurementsResponse measurements = await client.Measurements.FetchMeasurements(installationId, billingInterval.Start.AtStartOfDayInZone(REPORT_TIME_ZONE), billingInterval.End.AtStartOfDayInZone(REPORT_TIME_ZONE));
             return new Measurement
             {
-                GeneratedKilowattHours = measurementsResponse.TotalEnergyInIntervalkWh
+                GeneratedKilowattHours = measurements.TotalEnergyInIntervalkWh
             };
         }
     }

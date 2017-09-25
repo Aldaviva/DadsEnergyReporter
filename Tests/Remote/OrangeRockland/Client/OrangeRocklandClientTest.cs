@@ -24,7 +24,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         [Fact]
         public void ApiRoot()
         {
-            OrangeRocklandClientImpl.ApiRoot.Uri.ToString().Should().Be("https://apps.coned.com/ORMyAccount/Forms/");
+            OrangeRocklandClientImpl.ApiRoot.Uri.ToString().Should().Be("https://apps.coned.com/ORMyAccount/Forms");
         }
 
         [Fact]

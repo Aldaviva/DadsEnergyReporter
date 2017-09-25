@@ -18,7 +18,11 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         public OrangeRocklandAuthenticationClient OrangeRocklandAuthenticationClient { get; }
         public GreenButtonClient GreenButtonClient { get; }
 
-        internal static UriBuilder ApiRoot => new UriBuilder("https", "apps.coned.com", -1, "/ORMyAccount/Forms/");
+        public static UriBuilder ApiRoot => new UriBuilder()
+            .UseHttps(true)
+            .WithHost("apps.coned.com")
+            .WithPathSegment("ORMyAccount")
+            .WithPathSegment("Forms");
 
         public OrangeRocklandClientImpl(ApiClient apiClient)
         {

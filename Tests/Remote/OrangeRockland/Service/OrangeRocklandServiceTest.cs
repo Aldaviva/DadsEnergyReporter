@@ -18,8 +18,8 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         [Fact]
         public void DependenciesInjected()
         {
-            orangeRocklandService.OrangeRocklandAuthentication.Should().BeSameAs(orangeRocklandAuthentication);
-            orangeRocklandService.GreenButtonService.Should().BeSameAs(greenButtonService);
+            orangeRocklandService.Authentication.Should().BeSameAs(orangeRocklandAuthentication);
+            orangeRocklandService.GreenButton.Should().BeSameAs(greenButtonService);
         }
     }
 }

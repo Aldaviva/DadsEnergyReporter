@@ -95,6 +95,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
+    <Reference Include="UriBuilder.Fluent, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UriBuilder.Fluent.1.4.0\lib\net45\UriBuilder.Fluent.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Marshal\JsonSerializerConfigurer.cs" />
@@ -135,9 +138,9 @@
     <Compile Include="Service\EnergyReporter.cs" />
     <Compile Include="Data\Report.cs" />
     <Compile Include="Remote\PowerGuide\Client\PowerGuideClient.cs" />
-    <Compile Include="Remote\PowerGuide\Client\Authentication.cs" />
-    <Compile Include="Remote\PowerGuide\Client\Installations.cs" />
-    <Compile Include="Remote\PowerGuide\Client\Measurements.cs" />
+    <Compile Include="Remote\PowerGuide\Client\PowerGuideAuthenticationClient.cs" />
+    <Compile Include="Remote\PowerGuide\Client\InstallationClient.cs" />
+    <Compile Include="Remote\PowerGuide\Client\MeasurementClient.cs" />
     <Compile Include="Service\ReportGenerator.cs" />
     <Compile Include="Settings2.cs" />
   </ItemGroup>

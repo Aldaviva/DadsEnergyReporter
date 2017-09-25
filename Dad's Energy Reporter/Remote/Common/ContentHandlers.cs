@@ -49,7 +49,7 @@ namespace DadsEnergyReporter.Remote.Common
             using (Stream responseStream = await response.Content.ReadAsStreamAsync())
             {
                 var deserializer = new XmlSerializer(typeof(T));
-                return (T)deserializer.Deserialize(responseStream);
+                return (T) deserializer.Deserialize(responseStream);
             }
         }
 

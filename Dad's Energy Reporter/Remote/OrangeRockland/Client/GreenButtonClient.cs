@@ -18,9 +18,9 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 
         public async Task<XDocument> FetchGreenButtonData()
         {
-            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot;
-            uri.Path += "Billing/" +
-                        "GreenButtonData.aspx";
+            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot
+                .WithPathSegment("Billing")
+                .WithPathSegment("GreenButtonData.aspx");
 
             HttpContent formValues = new FormUrlEncodedContent(
                 new List<KeyValuePair<string, string>>
