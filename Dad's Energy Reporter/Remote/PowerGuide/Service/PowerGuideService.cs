@@ -5,22 +5,22 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
     public interface PowerGuideService
     {
         PowerGuideAuthenticationService Authentication { get; }
-        InstallationService InstallationService { get; }
-        MeasurementService MeasurementService { get; }
+        InstallationService Installation { get; }
+        MeasurementService Measurement { get; }
     }
     
     [Component]
     internal class PowerGuideServiceImpl : PowerGuideService
     {
         public PowerGuideAuthenticationService Authentication { get; }
-        public InstallationService InstallationService { get; }
-        public MeasurementService MeasurementService { get; }
+        public InstallationService Installation { get; }
+        public MeasurementService Measurement { get; }
         
         public PowerGuideServiceImpl(PowerGuideAuthenticationService authentication, InstallationService installationService, MeasurementService measurementService)
         {
             Authentication = authentication;
-            InstallationService = installationService;
-            MeasurementService = measurementService;
+            Installation = installationService;
+            Measurement = measurementService;
         }
         
         

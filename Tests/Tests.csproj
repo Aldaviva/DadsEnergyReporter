@@ -105,7 +105,7 @@
     <Compile Include="Remote\PowerGuide\Client\PowerGuideClientTest.cs" />
     <Compile Include="Service\EmailSenderTest.cs" />
     <Compile Include="Service\EnergyReporterTest.cs" />
-    <Compile Include="Service\ReportGenerator.cs" />
+    <Compile Include="Service\ReportGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

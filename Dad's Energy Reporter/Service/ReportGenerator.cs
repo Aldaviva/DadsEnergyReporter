@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
 using DadsEnergyReporter.Injection;
+using DadsEnergyReporter.Remote.OrangeRockland.Service;
 using DadsEnergyReporter.Remote.PowerGuide.Service;
 using NodaTime;
 
@@ -14,36 +16,23 @@ namespace DadsEnergyReporter.Service
     [Component]
     public class ReportGeneratorImpl : ReportGenerator
     {
-        private readonly MeasurementService measurementService;
+        private readonly PowerGuideService powerGuideService;
+        private readonly OrangeRocklandService orangeRocklandService;
 
-        public ReportGeneratorImpl(MeasurementService measurementService)
+        public ReportGeneratorImpl(PowerGuideService powerGuideService, OrangeRocklandService orangeRocklandService)
         {
-            this.measurementService = measurementService;
+            this.powerGuideService = powerGuideService;
+            this.orangeRocklandService = orangeRocklandService;
         }
 
         public async Task<Report> GenerateReport()
         {
-            LocalDate mostRecentBillingEndDate = CalculateMostRecentBillingEndDate(new LocalDate());
-            DateInterval billingInterval = CalculateBillingInterval(mostRecentBillingEndDate);
-            Measurement measurement = await measurementService.Measure(billingInterval);
+            GreenButtonData greenButtonData = await orangeRocklandService.GreenButton.FetchGreenButtonData();
+            GreenButtonData.MeterReading mostRecentOrangeRocklandBill = greenButtonData.meterReadings.Last();
+            DateInterval billingInterval = mostRecentOrangeRocklandBill.billingInterval;
+            Measurement measurement = await powerGuideService.Measurement.Measure(billingInterval);
 
             return new Report(measurement.GeneratedKilowattHours, billingInterval);
-        }
-
-        public static LocalDate CalculateMostRecentBillingEndDate(LocalDate now)
-        {
-            LocalDate billingEndDate = now.With(DateAdjusters.DayOfMonth(17));
-            if (billingEndDate >= now)
-            {
-                billingEndDate = billingEndDate.PlusMonths(-1);
-            }
-            return billingEndDate;
-        }
-
-        public static DateInterval CalculateBillingInterval(LocalDate lastBillingDay)
-        {
-            LocalDate start = lastBillingDay.PlusMonths(-1).PlusDays(1);
-            return new DateInterval(start, lastBillingDay);
         }
     }
 }
