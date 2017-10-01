@@ -73,9 +73,10 @@ namespace DadsEnergyReporter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.DateTime mostRecentReportBillingDate {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long mostRecentReportBillingDate {
             get {
-                return ((global::System.DateTime)(this["mostRecentReportBillingDate"]));
+                return ((long)(this["mostRecentReportBillingDate"]));
             }
             set {
                 this["mostRecentReportBillingDate"] = value;
@@ -84,12 +85,73 @@ namespace DadsEnergyReporter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ben@aldaviva.com")]
         public global::System.Collections.Generic.List<System.String> reportRecipientEmails {
             get {
                 return ((global::System.Collections.Generic.List<System.String>)(this["reportRecipientEmails"]));
             }
             set {
                 this["reportRecipientEmails"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("dadsenergyreporter@aldaviva.com")]
+        public string reportSenderEmail {
+            get {
+                return ((string)(this["reportSenderEmail"]));
+            }
+            set {
+                this["reportSenderEmail"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string smtpHost {
+            get {
+                return ((string)(this["smtpHost"]));
+            }
+            set {
+                this["smtpHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public short smtpPort {
+            get {
+                return ((short)(this["smtpPort"]));
+            }
+            set {
+                this["smtpPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string smtpUsername {
+            get {
+                return ((string)(this["smtpUsername"]));
+            }
+            set {
+                this["smtpUsername"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string smtpPassword {
+            get {
+                return ((string)(this["smtpPassword"]));
+            }
+            set {
+                this["smtpPassword"] = value;
             }
         }
     }

@@ -12,26 +12,27 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
     {
         Task<Measurement> Measure(DateInterval billingInterval);
     }
-    
+
     [Component]
     public class MeasurementServiceImpl : MeasurementService
     {
         private readonly PowerGuideClient client;
         private readonly InstallationService installationService;
+        private readonly DateTimeZone reportTimeZone;
 
-        private static readonly DateTimeZone REPORT_TIME_ZONE = DateTimeZoneProviders.Tzdb["America/New_York"];
-
-        public MeasurementServiceImpl(PowerGuideClient client, InstallationService installationService)
+        public MeasurementServiceImpl(PowerGuideClient client, InstallationService installationService, DateTimeZone reportTimeZone)
         {
             this.client = client;
             this.installationService = installationService;
+            this.reportTimeZone = reportTimeZone;
         }
 
         public async Task<Measurement> Measure(DateInterval billingInterval)
         {
             Guid installationId = await installationService.FetchInstallationId();
 
-            MeasurementsResponse measurements = await client.Measurements.FetchMeasurements(installationId, billingInterval.Start.AtStartOfDayInZone(REPORT_TIME_ZONE), billingInterval.End.AtStartOfDayInZone(REPORT_TIME_ZONE));
+            MeasurementsResponse measurements = await client.Measurements.FetchMeasurements(installationId, billingInterval.Start.AtStartOfDayInZone(reportTimeZone),
+                billingInterval.End.AtStartOfDayInZone(reportTimeZone));
             return new Measurement
             {
                 GeneratedKilowattHours = measurements.TotalEnergyInIntervalkWh

@@ -14,10 +14,25 @@
     <Setting Name="orangeRocklandPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="mostRecentReportBillingDate" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="mostRecentReportBillingDate" Type="System.Int64" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="reportRecipientEmails" Type="System.Collections.Generic.List&lt;System.String&gt;" Scope="User">
+      <Value Profile="(Default)">ben@aldaviva.com</Value>
+    </Setting>
+    <Setting Name="reportSenderEmail" Type="System.String" Scope="User">
+      <Value Profile="(Default)">dadsenergyreporter@aldaviva.com</Value>
+    </Setting>
+    <Setting Name="smtpHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="smtpPort" Type="System.Int16" Scope="User">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="smtpUsername" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="smtpPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

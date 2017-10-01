@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data.Marshal;
+using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Remote.Common;
 using FakeItEasy;
 using FluentAssertions;

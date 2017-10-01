@@ -102,8 +102,10 @@
   <ItemGroup>
     <Compile Include="Data\Marshal\JsonSerializerConfigurer.cs" />
     <Compile Include="Data\Marshal\OrangeRocklandData.cs" />
+    <Compile Include="Injection\MailKitModule.cs" />
+    <Compile Include="Injection\TimeZoneModule.cs" />
     <Compile Include="Remote\OrangeRockland\Client\GreenButtonClient.cs" />
-    <Compile Include="Remote\OrangeRockland\OrangeRocklandException.cs" />
+    <Compile Include="Exceptions\OrangeRocklandException.cs" />
     <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandAuthenticationService.cs" />
     <Compile Include="Remote\OrangeRockland\Service\GreenButtonService.cs" />
     <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandService.cs" />
@@ -128,12 +130,13 @@
     <Compile Include="Remote\OrangeRockland\Client\OrangeRocklandAuthenticationClient.cs" />
     <Compile Include="Remote\OrangeRockland\Client\OrangeRocklandClient.cs" />
     <Compile Include="Remote\Common\ContentHandlers.cs" />
-    <Compile Include="Remote\PowerGuide\PowerGuideException.cs" />
+    <Compile Include="Exceptions\PowerGuideException.cs" />
     <Compile Include="Remote\PowerGuide\Service\InstallationService.cs" />
     <Compile Include="Data\Measurement.cs" />
     <Compile Include="Remote\PowerGuide\Service\MeasurementService.cs" />
     <Compile Include="Remote\PowerGuide\Service\PowerGuideAuthenticationService.cs" />
     <Compile Include="Remote\PowerGuide\Service\PowerGuideService.cs" />
+    <Compile Include="Exceptions\EmailException.cs" />
     <Compile Include="Service\EmailSender.cs" />
     <Compile Include="Service\EnergyReporter.cs" />
     <Compile Include="Data\Report.cs" />
@@ -142,7 +145,7 @@
     <Compile Include="Remote\PowerGuide\Client\InstallationClient.cs" />
     <Compile Include="Remote\PowerGuide\Client\MeasurementClient.cs" />
     <Compile Include="Service\ReportGenerator.cs" />
-    <Compile Include="Settings2.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

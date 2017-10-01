@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Dom.Html;
 using DadsEnergyReporter.Data.Marshal;
+using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Remote.Common;
 

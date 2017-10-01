@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data.Marshal;
+using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Remote.OrangeRockland.Client;
 using FakeItEasy;
 using FluentAssertions;

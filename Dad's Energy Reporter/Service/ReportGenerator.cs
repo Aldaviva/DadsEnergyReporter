@@ -6,7 +6,7 @@ using NodaTime;
 
 namespace DadsEnergyReporter.Service
 {
-    internal interface ReportGenerator
+    public interface ReportGenerator
     {
         Task<Report> GenerateReport();
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data.Marshal;
+using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Remote.Common;
 
 namespace DadsEnergyReporter.Remote.PowerGuide.Client

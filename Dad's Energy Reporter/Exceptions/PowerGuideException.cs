@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DadsEnergyReporter.Remote.PowerGuide
+namespace DadsEnergyReporter.Exceptions
 {
     [Serializable]
     internal class PowerGuideException : Exception

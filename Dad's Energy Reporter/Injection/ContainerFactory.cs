@@ -9,19 +9,21 @@ namespace DadsEnergyReporter.Injection
         public static IContainer CreateContainer()
         {
             var containerBuilder = new ContainerBuilder();
-
-            containerBuilder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            
+            containerBuilder.RegisterAssemblyTypes(assembly)
                 .Where(t => t.GetCustomAttribute<ComponentAttribute>() != null)
                 .AsImplementedInterfaces()
-                .PropertiesAutowired((info, o) => info.GetCustomAttribute<AutowiredAttribute>() != null)
-//                .PropertiesAutowired()
+                .PropertiesAutowired((info, _) => info.GetCustomAttribute<AutowiredAttribute>() != null)
                 .InstancePerLifetimeScope()
-                .OnActivated(eventArgs => eventArgs.Instance.GetType().GetMethod("PostConstruct", new Type[0])
-                    ?.Invoke(eventArgs.Instance, new object[0]))
-                //.AutoActivate()
-                ;
+                .OnActivated(eventArgs =>
+                {
+                    eventArgs.Instance.GetType()
+                        .GetMethod("PostConstruct", new Type[0])?
+                        .Invoke(eventArgs.Instance, new object[0]);
+                });
 
-            containerBuilder.RegisterModule<HttpClientModule>();
+            containerBuilder.RegisterAssemblyModules(assembly);
 
             return containerBuilder.Build();
         }

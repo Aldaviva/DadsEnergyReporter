@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DadsEnergyReporter.Remote.OrangeRockland
+namespace DadsEnergyReporter.Exceptions
 {
     [Serializable]
     internal class OrangeRocklandException : Exception

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Remote.OrangeRockland.Client;
 using NodaTime;

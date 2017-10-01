@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Remote.Common;
 using FakeItEasy;
 using FluentAssertions;

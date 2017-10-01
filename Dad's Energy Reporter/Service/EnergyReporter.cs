@@ -24,14 +24,17 @@ namespace DadsEnergyReporter.Service
         private readonly EmailSender emailSender;
         private readonly PowerGuideAuthenticationService powerGuideAuthenticationService;
         private readonly OrangeRocklandAuthenticationService orangeRocklandAuthenticationService;
+        private readonly DateTimeZone reportTimeZone;
 
-        public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender,
-            PowerGuideAuthenticationService powerGuideAuthenticationService)
+        public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender, PowerGuideAuthenticationService powerGuideAuthenticationService,
+            OrangeRocklandAuthenticationService orangeRocklandAuthenticationService, DateTimeZone reportTimeZone)
         {
             JsonSerializerConfigurer.ConfigureDefault();
             this.reportGenerator = reportGenerator;
             this.emailSender = emailSender;
             this.powerGuideAuthenticationService = powerGuideAuthenticationService;
+            this.orangeRocklandAuthenticationService = orangeRocklandAuthenticationService;
+            this.reportTimeZone = reportTimeZone;
         }
 
         public async Task Start()
@@ -39,7 +42,9 @@ namespace DadsEnergyReporter.Service
             Settings settings = Settings.Default;
             ValidateSettings(settings);
 
-            if (HaveSentReportTooRecently(settings.mostRecentReportBillingDate))
+            Instant mostRecentReportBillingDate = Instant.FromUnixTimeMilliseconds(settings.mostRecentReportBillingDate);
+
+            if (HaveSentReportTooRecently(mostRecentReportBillingDate))
             {
                 Console.WriteLine("Report was already sent recently, not checking again now.");
                 return;
@@ -47,18 +52,11 @@ namespace DadsEnergyReporter.Service
 
             try
             {
-                orangeRocklandAuthenticationService.Username = settings.orangeRocklandUsername;
-                orangeRocklandAuthenticationService.Password = settings.orangeRocklandPassword;
-                powerGuideAuthenticationService.Username = settings.solarCityUsername;
-                powerGuideAuthenticationService.Password = settings.solarCityPassword;
-
-                Task.WaitAll(
-                    orangeRocklandAuthenticationService.GetAuthToken(),
-                    powerGuideAuthenticationService.GetAuthToken());
+                await LogIn();
 
                 Report report = await reportGenerator.GenerateReport();
 
-                if (HaveSentReportTooRecently(settings.mostRecentReportBillingDate, report))
+                if (HaveAlreadySentReport(mostRecentReportBillingDate, report))
                 {
                     Console.WriteLine("Report has already been sent for billing cycle ending on " +
                                       $"{report.BillingDate}, not sending again.");
@@ -66,7 +64,7 @@ namespace DadsEnergyReporter.Service
                 }
 
                 await emailSender.SendEmail(report, settings.reportRecipientEmails);
-                settings.mostRecentReportBillingDate = report.BillingDate.ToDateTimeUnspecified();
+                settings.mostRecentReportBillingDate = report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToUnixTimeMilliseconds();
                 settings.Save();
             }
             finally
@@ -77,16 +75,29 @@ namespace DadsEnergyReporter.Service
             }
         }
 
-        internal static bool HaveSentReportTooRecently(DateTime mostRecentReportBillingDate)
+        internal Task LogIn()
         {
-            double daysSinceLastReportGenerated =
-                new Interval(mostRecentReportBillingDate.ToInstant(), new Instant()).Duration.TotalDays;
+            Settings settings = Settings.Default;
+
+            orangeRocklandAuthenticationService.Username = settings.orangeRocklandUsername;
+            orangeRocklandAuthenticationService.Password = settings.orangeRocklandPassword;
+            powerGuideAuthenticationService.Username = settings.solarCityUsername;
+            powerGuideAuthenticationService.Password = settings.solarCityPassword;
+
+            return Task.WhenAll(
+                orangeRocklandAuthenticationService.GetAuthToken(),
+                powerGuideAuthenticationService.GetAuthToken());
+        }
+
+        internal bool HaveSentReportTooRecently(Instant mostRecentReportBillingDate)
+        {
+            double daysSinceLastReportGenerated = new Interval(mostRecentReportBillingDate, SystemClock.Instance.GetCurrentInstant()).Duration.TotalDays;
             return daysSinceLastReportGenerated < 28;
         }
 
-        internal static bool HaveSentReportTooRecently(DateTime mostRecentReportBillingDate, Report report)
+        internal bool HaveAlreadySentReport(Instant mostRecentReportBillingDate, Report report)
         {
-            return report.BillingDate <= LocalDate.FromDateTime(mostRecentReportBillingDate);
+            return !(mostRecentReportBillingDate.InZone(reportTimeZone).Date < report.BillingDate);
         }
 
         private static void ValidateSettings(Settings settings)
@@ -115,6 +126,8 @@ namespace DadsEnergyReporter.Service
             {
                 throw new InvalidCredentialException("Missing list of report email recipients.");
             }
+
+            //TODO more settings to validate
         }
     }
 }
