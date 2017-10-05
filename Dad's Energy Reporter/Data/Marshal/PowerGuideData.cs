@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using NodaTime;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -43,6 +42,23 @@ namespace DadsEnergyReporter.Data.Marshal
     public class PowerGuideAuthToken
     {
         public string FedAuth { get; set; }
+
+        private bool Equals(PowerGuideAuthToken other)
+        {
+            return string.Equals(FedAuth, other.FedAuth);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == this.GetType() && Equals((PowerGuideAuthToken) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return FedAuth != null ? FedAuth.GetHashCode() : 0;
+        }
     }
 
     public enum DataStatus

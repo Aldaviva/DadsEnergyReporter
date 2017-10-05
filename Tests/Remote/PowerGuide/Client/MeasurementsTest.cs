@@ -35,7 +35,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
         {
             var response = A.Fake<HttpResponseMessage>();
             A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>._)).Returns(response);
-            A.CallTo(() => contentHandlers.ReadContentJsonAs<MeasurementsResponse>(response))
+            A.CallTo(() => contentHandlers.ReadContentAsJson<MeasurementsResponse>(response))
                 .Returns(JsonConvert.DeserializeObject<MeasurementsResponse>(
                     File.ReadAllText("data/measurements.json")));
 

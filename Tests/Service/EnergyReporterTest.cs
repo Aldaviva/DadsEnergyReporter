@@ -35,6 +35,7 @@ namespace DadsEnergyReporter.Service
             settings.solarCityPassword = "solarcityPass";
             settings.mostRecentReportBillingDate = 0;
             settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
+            settings.reportSenderEmail = "dadsenergyreporter@aldaviva.com";
 
             var report = new Report(100, new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)));
             A.CallTo(() => reportGenerator.GenerateReport()).Returns(report);
@@ -62,6 +63,7 @@ namespace DadsEnergyReporter.Service
             settings.solarCityPassword = "solarcityPass";
             settings.mostRecentReportBillingDate = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(27)).ToUnixTimeMilliseconds();
             settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
+            settings.reportSenderEmail = "dadsenergyreporter@aldaviva.com";
 
             await energyReporter.Start();
 
@@ -81,6 +83,7 @@ namespace DadsEnergyReporter.Service
             settings.solarCityPassword = "solarcityPass";
             settings.mostRecentReportBillingDate = new LocalDate(2017, 08, 16).AtStartOfDayInZone(ZONE).ToInstant().ToUnixTimeMilliseconds();
             settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
+            settings.reportSenderEmail = "dadsenergyreporter@aldaviva.com";
 
             var report = new Report(100, new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)));
             A.CallTo(() => reportGenerator.GenerateReport()).Returns(report);

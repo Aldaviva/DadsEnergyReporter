@@ -37,7 +37,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
             {
                 using (HttpResponseMessage response = await HttpClient.GetAsync(uri.Uri))
                 {
-                    return await ReadContentJsonAs<MeasurementsResponse>(response);
+                    return await ReadContentAsJson<MeasurementsResponse>(response);
                 }
             }
             catch (HttpRequestException e)

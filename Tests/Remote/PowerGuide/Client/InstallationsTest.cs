@@ -33,7 +33,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
         {
             var response = A.Fake<HttpResponseMessage>();
             A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>._)).Returns(response);
-            A.CallTo(() => contentHandlers.ReadContentJsonAs<InstallationsResponse>(response))
+            A.CallTo(() => contentHandlers.ReadContentAsJson<InstallationsResponse>(response))
                 .Returns(JsonConvert.DeserializeObject<InstallationsResponse>(
                     File.ReadAllText("data/installations.json")));
 

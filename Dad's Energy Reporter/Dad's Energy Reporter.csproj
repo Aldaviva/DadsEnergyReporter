@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>DadsEnergyReporter.Entry.MainClass</StartupObject>
@@ -146,6 +148,7 @@
     <Compile Include="Remote\PowerGuide\Client\MeasurementClient.cs" />
     <Compile Include="Service\ReportGenerator.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Exceptions\SettingsException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

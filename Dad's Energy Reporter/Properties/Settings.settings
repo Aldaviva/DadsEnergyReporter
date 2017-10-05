@@ -26,7 +26,7 @@
     <Setting Name="smtpHost" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="smtpPort" Type="System.Int16" Scope="User">
+    <Setting Name="smtpPort" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">25</Value>
     </Setting>
     <Setting Name="smtpUsername" Type="System.String" Scope="User">

@@ -10,7 +10,7 @@ namespace DadsEnergyReporter.Entry
     {
         public static void Main(string[] args)
         {
-            if (args.Length >= 1 && args[0] == "--interactive")
+            if (args.Length >= 1 && args[0] == "--console")
             {
                 using (IContainer container = ContainerFactory.CreateContainer())
                 using (ILifetimeScope scope = container.BeginLifetimeScope())

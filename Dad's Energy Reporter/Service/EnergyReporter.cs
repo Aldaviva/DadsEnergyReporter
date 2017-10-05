@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Security.Authentication;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
 using DadsEnergyReporter.Data.Marshal;
+using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Properties;
 using DadsEnergyReporter.Remote.OrangeRockland.Service;
 using DadsEnergyReporter.Remote.PowerGuide.Service;
 using NodaTime;
-using NodaTime.Extensions;
 
 namespace DadsEnergyReporter.Service
 {
@@ -102,32 +101,16 @@ namespace DadsEnergyReporter.Service
 
         private static void ValidateSettings(Settings settings)
         {
-            if (settings.orangeRocklandUsername.Length == 0)
+            try
             {
-                throw new InvalidCredentialException("Missing Orange & Rockland username setting.");
+                settings.Validate();
             }
-
-            if (settings.orangeRocklandPassword.Length == 0)
+            catch (SettingsException e)
             {
-                throw new InvalidCredentialException("Missing Orange & Rockland password setting.");
+                Console.WriteLine($"Invalid setting: {e.SettingsKey} = {e.InvalidValue}");
+                Console.WriteLine(e.Message);
+                throw;
             }
-
-            if (settings.solarCityUsername.Length == 0)
-            {
-                throw new InvalidCredentialException("Missing SolarCity username setting.");
-            }
-
-            if (settings.solarCityPassword.Length == 0)
-            {
-                throw new InvalidCredentialException("Missing SolarCity password setting.");
-            }
-
-            if (settings.reportRecipientEmails.Count == 0)
-            {
-                throw new InvalidCredentialException("Missing list of report email recipients.");
-            }
-
-            //TODO more settings to validate
         }
     }
 }

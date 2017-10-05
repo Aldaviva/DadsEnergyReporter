@@ -21,7 +21,7 @@ namespace DadsEnergyReporter.Remote.Common
         public HttpClient HttpClient { get; }
         public CookieContainer Cookies { get; }
 
-        protected ApiClientImpl(HttpClient httpClient, CookieContainer cookies, ContentHandlers contentHandlers)
+        public ApiClientImpl(HttpClient httpClient, CookieContainer cookies, ContentHandlers contentHandlers)
         {
             ContentHandlers = contentHandlers;
             HttpClient = httpClient;
@@ -39,9 +39,9 @@ namespace DadsEnergyReporter.Remote.Common
             ApiClient = apiClient;
         }
 
-        public Task<T> ReadContentJsonAs<T>(HttpResponseMessage response)
+        public Task<T> ReadContentAsJson<T>(HttpResponseMessage response)
         {
-            return ApiClient.ContentHandlers.ReadContentJsonAs<T>(response);
+            return ApiClient.ContentHandlers.ReadContentAsJson<T>(response);
         }
 
         public Task<XDocument> ReadContentAsXml(HttpResponseMessage response)

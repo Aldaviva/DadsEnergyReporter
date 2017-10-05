@@ -12,7 +12,7 @@ namespace DadsEnergyReporter.Remote.Common
 {
     internal interface ContentHandlers
     {
-        Task<T> ReadContentJsonAs<T>(HttpResponseMessage response);
+        Task<T> ReadContentAsJson<T>(HttpResponseMessage response);
         Task<XDocument> ReadContentAsXml(HttpResponseMessage response);
         Task<T> ReadContentAsXml<T>(HttpResponseMessage response);
         Task<IHtmlDocument> ReadContentAsHtml(HttpResponseMessage response);
@@ -24,7 +24,7 @@ namespace DadsEnergyReporter.Remote.Common
         private static readonly JsonSerializer JSON_SERIALIZER = JsonSerializer.CreateDefault();
         private static readonly HtmlParser HTML_PARSER = new HtmlParser();
 
-        public async Task<T> ReadContentJsonAs<T>(HttpResponseMessage response)
+        public async Task<T> ReadContentAsJson<T>(HttpResponseMessage response)
         {
             response.EnsureSuccessStatusCode();
             using (Stream responseStream = await response.Content.ReadAsStreamAsync())

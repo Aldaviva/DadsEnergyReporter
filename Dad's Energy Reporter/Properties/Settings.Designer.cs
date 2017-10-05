@@ -122,9 +122,9 @@ namespace DadsEnergyReporter.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("25")]
-        public short smtpPort {
+        public ushort smtpPort {
             get {
-                return ((short)(this["smtpPort"]));
+                return ((ushort)(this["smtpPort"]));
             }
             set {
                 this["smtpPort"] = value;

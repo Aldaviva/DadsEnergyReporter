@@ -22,7 +22,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         Task LogOut();
     }
 
-    [Component]
+//    [Component]
     internal class OrangeRocklandAuthenticationClientImpl : AbstractResource, OrangeRocklandAuthenticationClient
     {
         private const string AUTH_COOKIE_NAME = "LogCOOKPl95FnjAT";

@@ -20,7 +20,7 @@ namespace DadsEnergyReporter.Injection
             builder.Register(c => new HttpClient(c.Resolve<HttpMessageHandler>())
             {
                 Timeout = TimeSpan.FromSeconds(30)
-            });
+            }).AsSelf();
         }
     }
 }

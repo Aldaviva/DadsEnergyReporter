@@ -8,7 +8,6 @@ using AngleSharp.Parser.Html;
 using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Remote.Common;
-using DadsEnergyReporter.Remote.OrangeRockland;
 using FakeItEasy;
 using FluentAssertions;
 using Xunit;
