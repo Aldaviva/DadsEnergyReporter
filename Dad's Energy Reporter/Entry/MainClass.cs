@@ -11,10 +11,10 @@ namespace DadsEnergyReporter.Entry
     {
         public static void Main(string[] args)
         {
+            JsonSerializerConfigurer.ConfigureDefault();
+            
             if (args.Length >= 1 && args[0] == "--console")
             {
-                JsonSerializerConfigurer.ConfigureDefault();
-
                 using (IContainer container = ContainerFactory.CreateContainer())
                 using (ILifetimeScope scope = container.BeginLifetimeScope())
                 {

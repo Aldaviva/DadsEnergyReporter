@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Remote.OrangeRockland.Service;
 using DadsEnergyReporter.Remote.PowerGuide.Service;
-using NodaTime;
+using NLog;
 
 namespace DadsEnergyReporter.Service
 {
@@ -17,6 +16,8 @@ namespace DadsEnergyReporter.Service
     [Component]
     public class ReportGeneratorImpl : ReportGenerator
     {
+        private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
+
         private readonly PowerGuideService powerGuideService;
         private readonly OrangeRocklandService orangeRocklandService;
 
@@ -28,15 +29,19 @@ namespace DadsEnergyReporter.Service
 
         public async Task<Report> GenerateReport()
         {
-            Console.WriteLine("Downloading Green Button Data from Orange & Rockland");
+            LOGGER.Info("Downloading Green Button Data from Orange & Rockland");
             GreenButtonData greenButtonData = await orangeRocklandService.GreenButton.FetchGreenButtonData();
             GreenButtonData.MeterReading mostRecentOrangeRocklandBill = greenButtonData.MeterReadings.Last();
-            DateInterval billingInterval = mostRecentOrangeRocklandBill.BillingInterval;
-            
-            Console.WriteLine("Downloading PowerGuide solar panel report from SolarCity");
-            Measurement measurement = await powerGuideService.Measurement.Measure(billingInterval);
+            LOGGER.Debug("Paid ${0} to use {1} kWh of electricity between {2} and {3}", mostRecentOrangeRocklandBill.CostCents / 100,
+                mostRecentOrangeRocklandBill.EnergyConsumedKWh, mostRecentOrangeRocklandBill.BillingInterval.Start,
+                mostRecentOrangeRocklandBill.BillingInterval.End);
 
-            return new Report(measurement.GeneratedKilowattHours, billingInterval);
+            LOGGER.Info("Downloading PowerGuide solar panel report from SolarCity");
+            Measurement measurement = await powerGuideService.Measurement.Measure(mostRecentOrangeRocklandBill.BillingInterval);
+            LOGGER.Debug("Generated {0} kWh of electricity between {1} and {2}", measurement.GeneratedKilowattHours, mostRecentOrangeRocklandBill.BillingInterval.Start,
+                mostRecentOrangeRocklandBill.BillingInterval.End);
+
+            return new Report(measurement.GeneratedKilowattHours, mostRecentOrangeRocklandBill.BillingInterval);
         }
     }
 }

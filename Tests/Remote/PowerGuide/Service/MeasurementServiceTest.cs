@@ -6,7 +6,6 @@ using FakeItEasy;
 using FluentAssertions;
 using NodaTime;
 using Xunit;
-using Measurement = DadsEnergyReporter.Data.Measurement;
 
 namespace DadsEnergyReporter.Remote.PowerGuide.Service
 {
@@ -31,15 +30,20 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
             var installationGuid = new Guid("45c0c40e-a9ad-11e7-abc4-cec278b6b50a");
             A.CallTo(() => installationService.FetchInstallationId()).Returns(installationGuid);
 
-            var measurementResponse = new MeasurementsResponse()
+            var measurementResponse = new MeasurementsResponse
             {
-                Measurements = new List<Data.Marshal.Measurement>
+                Measurements = new List<Measurement>
                 {
-                    new Data.Marshal.Measurement()
+                    new Measurement
                     {
-                        CumulativekWh = 1,
+                        CumulativekWh = 0,
                         DataStatus = DataStatus.Validated,
-                        EnergyInIntervalkWh = 100,
+                        Timestamp = new LocalDateTime(2017, 07, 16, 0, 0)
+                    },
+                    new Measurement
+                    {
+                        CumulativekWh = 100,
+                        DataStatus = DataStatus.Validated,
                         Timestamp = new LocalDateTime(2017, 08, 16, 0, 0)
                     }
                 },
@@ -49,7 +53,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
                 .Returns(measurementResponse);
 
             var interval = new DateInterval(new LocalDate(2017, 7, 17), new LocalDate(2017, 8, 16));
-            Measurement measurement = await measurementService.Measure(interval);
+            Data.Measurement measurement = await measurementService.Measure(interval);
 
             measurement.GeneratedKilowattHours.Should().Be(100);
         }

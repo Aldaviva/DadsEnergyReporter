@@ -22,7 +22,9 @@ namespace DadsEnergyReporter.Service
 
         public EnergyReporterTest()
         {
-            energyReporter = new EnergyReporterImpl(reportGenerator, emailSender, powerGuideAuthenticationService, orangeRocklandAuthenticationService, ZONE);
+            var powerGuideService = new PowerGuideServiceImpl(powerGuideAuthenticationService, null, null);
+            var orangeRocklandService = new OrangeRocklandServiceImpl(orangeRocklandAuthenticationService, null);
+            energyReporter = new EnergyReporterImpl(reportGenerator, emailSender, powerGuideService, orangeRocklandService, ZONE);
         }
 
         [Fact]

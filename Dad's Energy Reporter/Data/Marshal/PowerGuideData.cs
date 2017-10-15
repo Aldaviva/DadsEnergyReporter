@@ -10,7 +10,7 @@ namespace DadsEnergyReporter.Data.Marshal
     {
         public LocalDateTime Timestamp { get; set; }
         public double CumulativekWh { get; set; }
-        public double EnergyInIntervalkWh { get; set; }
+        //public double EnergyInIntervalkWh { get; set; } //is sometimes null and sometimes negative, so ignore and use CumulativekWh instead
         public DataStatus DataStatus { get; set; }
     }
 

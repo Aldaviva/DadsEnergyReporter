@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Reflection;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
 using DadsEnergyReporter.Exceptions;
@@ -6,6 +6,7 @@ using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Properties;
 using DadsEnergyReporter.Remote.OrangeRockland.Service;
 using DadsEnergyReporter.Remote.PowerGuide.Service;
+using NLog;
 using NodaTime;
 
 namespace DadsEnergyReporter.Service
@@ -18,24 +19,29 @@ namespace DadsEnergyReporter.Service
     [Component]
     internal class EnergyReporterImpl : EnergyReporter
     {
+        private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
+        
         private readonly ReportGenerator reportGenerator;
         private readonly EmailSender emailSender;
-        private readonly PowerGuideAuthenticationService powerGuideAuthenticationService;
-        private readonly OrangeRocklandAuthenticationService orangeRocklandAuthenticationService;
+        private readonly PowerGuideService powerGuideService;
+        private readonly OrangeRocklandService orangeRocklandService;
         private readonly DateTimeZone reportTimeZone;
 
-        public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender, PowerGuideAuthenticationService powerGuideAuthenticationService,
-            OrangeRocklandAuthenticationService orangeRocklandAuthenticationService, DateTimeZone reportTimeZone)
+        public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender, PowerGuideService powerGuideService,
+            OrangeRocklandService orangeRocklandService, DateTimeZone reportTimeZone)
         {
             this.reportGenerator = reportGenerator;
             this.emailSender = emailSender;
-            this.powerGuideAuthenticationService = powerGuideAuthenticationService;
-            this.orangeRocklandAuthenticationService = orangeRocklandAuthenticationService;
+            this.powerGuideService = powerGuideService;
+            this.orangeRocklandService = orangeRocklandService;
             this.reportTimeZone = reportTimeZone;
         }
 
         public async Task Start()
         {
+            LOGGER.Info("Dad's Energy Reporter {0}", Assembly.GetExecutingAssembly().GetName().Version);
+            
+            LOGGER.Debug("Validating settings");
             Settings settings = Settings.Default;
             ValidateSettings(settings);
 
@@ -43,36 +49,35 @@ namespace DadsEnergyReporter.Service
 
             if (HaveSentReportTooRecently(mostRecentReportBillingDate))
             {
-                Console.WriteLine("Report was already sent recently, not checking again now.");
+                LOGGER.Info("Report was already sent recently (on {0}), not checking again now.", mostRecentReportBillingDate);
                 return;
             }
 
             try
             {
-                Console.WriteLine("Logging in");
+                LOGGER.Info("Logging in");
                 await LogIn();
 
                 Report report = await reportGenerator.GenerateReport();
 
                 if (HaveAlreadySentReport(mostRecentReportBillingDate, report))
                 {
-                    Console.WriteLine("Report has already been sent for billing cycle ending on " +
-                                      $"{report.BillingDate}, not sending again.");
+                    LOGGER.Info("Report has already been sent for billing cycle ending on {0}, not sending again.", report.BillingDate);
                     return;
                 }
 
-                Console.WriteLine("Sending email report");
+                LOGGER.Info("Sending email report");
                 await emailSender.SendEmail(report, settings.reportRecipientEmails);
                 settings.mostRecentReportBillingDate = report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToUnixTimeMilliseconds();
                 settings.Save();
             }
             finally
             {
-                Console.WriteLine("Logging out");
+                LOGGER.Info("Logging out");
                 Task.WaitAll(
-                    powerGuideAuthenticationService.LogOut(),
-                    orangeRocklandAuthenticationService.LogOut());
-                Console.WriteLine("Done");
+                    powerGuideService.Authentication.LogOut(),
+                    orangeRocklandService.Authentication.LogOut());
+                LOGGER.Info("Done");
             }
         }
 
@@ -80,14 +85,14 @@ namespace DadsEnergyReporter.Service
         {
             Settings settings = Settings.Default;
 
-            orangeRocklandAuthenticationService.Username = settings.orangeRocklandUsername;
-            orangeRocklandAuthenticationService.Password = settings.orangeRocklandPassword;
-            powerGuideAuthenticationService.Username = settings.solarCityUsername;
-            powerGuideAuthenticationService.Password = settings.solarCityPassword;
+            orangeRocklandService.Authentication.Username = settings.orangeRocklandUsername;
+            orangeRocklandService.Authentication.Password = settings.orangeRocklandPassword;
+            powerGuideService.Authentication.Username = settings.solarCityUsername;
+            powerGuideService.Authentication.Password = settings.solarCityPassword;
 
             return Task.WhenAll(
-                orangeRocklandAuthenticationService.GetAuthToken(),
-                powerGuideAuthenticationService.GetAuthToken());
+                orangeRocklandService.Authentication.GetAuthToken(),
+                powerGuideService.Authentication.GetAuthToken());
         }
 
         internal bool HaveSentReportTooRecently(Instant mostRecentReportBillingDate)
@@ -109,8 +114,8 @@ namespace DadsEnergyReporter.Service
             }
             catch (SettingsException e)
             {
-                Console.WriteLine($"Invalid setting: {e.SettingsKey} = {e.InvalidValue}");
-                Console.WriteLine(e.Message);
+                LOGGER.Error($"Invalid setting: {e.SettingsKey} = {e.InvalidValue}");
+                LOGGER.Error(e);
                 throw;
             }
         }

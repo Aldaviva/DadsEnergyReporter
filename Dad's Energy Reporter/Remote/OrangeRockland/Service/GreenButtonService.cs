@@ -60,8 +60,6 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
                         Instant end = start.Plus(
                             Duration.FromSeconds(long.Parse(element.Descendants(XName.Get("duration", NS)).First().Value)));
 
-                        
-                        
                         return new GreenButtonData.MeterReading
                         {
                             EnergyConsumedKWh =

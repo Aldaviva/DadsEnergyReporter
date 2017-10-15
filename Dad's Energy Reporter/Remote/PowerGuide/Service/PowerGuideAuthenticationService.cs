@@ -4,6 +4,7 @@ using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Remote.PowerGuide.Client;
+using NLog;
 
 namespace DadsEnergyReporter.Remote.PowerGuide.Service
 {
@@ -19,6 +20,8 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
     [Component]
     internal class PowerGuideAuthenticationServiceImpl : PowerGuideAuthenticationService
     {
+        private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
+        
         private readonly PowerGuideClient client;
 
         public string Username { get; set; }
@@ -38,9 +41,11 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
 
         private async Task<PowerGuideAuthToken> LogIn()
         {
+            LOGGER.Debug("Logging in to MySolarCity as {0}", Username);
             PreLogInData preLogInData = await client.Authentication.FetchPreLogInData();
             IDictionary<string, string> credentialResponseParams = await client.Authentication.SubmitCredentials(Username, Password, preLogInData);
             PowerGuideAuthToken authToken = await client.Authentication.FetchAuthToken(credentialResponseParams);
+            LOGGER.Debug("Logged in to MySolarCity");
             return authToken;
         }
 

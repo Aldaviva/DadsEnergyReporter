@@ -3,6 +3,7 @@ using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Remote.OrangeRockland.Client;
+using NLog;
 
 namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 {
@@ -18,6 +19,8 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
     [Component]
     public class OrangeRocklandAuthenticationServiceImpl : OrangeRocklandAuthenticationService
     {
+        private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
+        
         private readonly OrangeRocklandClient client;
 
         public string Username { get; set; }
@@ -37,7 +40,9 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
         private async Task<OrangeRocklandAuthToken> LogIn()
         {
+            LOGGER.Debug("Logging in to Orange & Rockland as {0}", Username);
             OrangeRocklandAuthToken authToken = await client.OrangeRocklandAuthenticationClient.SubmitCredentials(Username, Password);
+            LOGGER.Debug("Logged into Orange & Rockland");
             return authToken;
         }
 

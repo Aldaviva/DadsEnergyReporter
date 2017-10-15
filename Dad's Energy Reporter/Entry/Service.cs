@@ -20,8 +20,8 @@ namespace DadsEnergyReporter.Entry
             _container = ContainerFactory.CreateContainer();
             _scope = _container.BeginLifetimeScope();
 
-            var powerGuideReporter = _scope.Resolve<EnergyReporter>();
-            powerGuideReporter.Start();
+            var energyReporter = _scope.Resolve<EnergyReporter>();
+            energyReporter.Start();
         }
 
         protected override void OnStop()
