@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Remote.OrangeRockland.Client;
@@ -11,13 +10,13 @@ using Xunit;
 
 namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 {
-    public class AuthServiceTest
+    public class OrangeRocklandAuthenticationServiceTest
     {
         private readonly OrangeRocklandAuthenticationServiceImpl orangeRocklandAuthenticationService;
         private readonly OrangeRocklandClient client = A.Fake<OrangeRocklandClient>();
         private readonly OrangeRocklandAuthenticationClient authClient = A.Fake<OrangeRocklandAuthenticationClient>();
 
-        public AuthServiceTest()
+        public OrangeRocklandAuthenticationServiceTest()
         {
             orangeRocklandAuthenticationService = new OrangeRocklandAuthenticationServiceImpl(client);
             A.CallTo(() => client.OrangeRocklandAuthenticationClient).Returns(authClient);
@@ -26,13 +25,9 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         [Fact]
         public async void GetAuthToken()
         {
-            var preLogInData = new Dictionary<string, string>();
-            var preLogInDataTask = Task.FromResult<IDictionary<string, string>>(preLogInData);
-            A.CallTo(() => authClient.FetchPreLogInData()).Returns<Task<IDictionary<string, string>>>(preLogInDataTask);
-
             var token = new OrangeRocklandAuthToken();
             var tokenTask = Task.FromResult(token);
-            A.CallTo(() => authClient.SubmitCredentials(A<string>._, A<string>._, A<IDictionary<string, string>>._))
+            A.CallTo(() => authClient.SubmitCredentials(A<string>._, A<string>._))
                 .Returns(tokenTask);
 
             orangeRocklandAuthenticationService.Username = "user";
@@ -40,15 +35,13 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
             OrangeRocklandAuthToken actual = await orangeRocklandAuthenticationService.GetAuthToken();
             actual.Should().BeSameAs(token);
 
-            A.CallTo(() => authClient.FetchPreLogInData()).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => authClient.SubmitCredentials("user", "pass", preLogInData))
+            A.CallTo(() => authClient.SubmitCredentials("user", "pass"))
                 .MustHaveHappened(Repeated.Exactly.Once);
 
             actual = await orangeRocklandAuthenticationService.GetAuthToken();
             actual.Should().BeSameAs(token);
 
-            A.CallTo(() => authClient.FetchPreLogInData()).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => authClient.SubmitCredentials("user", "pass", preLogInData))
+            A.CallTo(() => authClient.SubmitCredentials("user", "pass"))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -59,9 +52,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
             A.CallTo(() => authClient.LogOut()).MustNotHaveHappened();
 
-            A.CallTo(() => authClient.FetchPreLogInData())
-                .Returns(Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>()));
-            A.CallTo(() => authClient.SubmitCredentials(A<string>._, A<string>._, A<IDictionary<string, string>>._))
+            A.CallTo(() => authClient.SubmitCredentials(A<string>._, A<string>._))
                 .Returns(Task.FromResult(new OrangeRocklandAuthToken()));
 
             orangeRocklandAuthenticationService.Username = "user";
@@ -76,9 +67,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         [Fact]
         public async void LogOutContinuesOnException()
         {
-            A.CallTo(() => authClient.FetchPreLogInData())
-                .Returns(Task.FromResult<IDictionary<string, string>>(new Dictionary<string, string>()));
-            A.CallTo(() => authClient.SubmitCredentials(A<string>._, A<string>._, A<IDictionary<string, string>>._))
+            A.CallTo(() => authClient.SubmitCredentials(A<string>._, A<string>._))
                 .Returns(Task.FromResult(new OrangeRocklandAuthToken()));
             
             orangeRocklandAuthenticationService.Username = "user";

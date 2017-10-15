@@ -1,34 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
 using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Exceptions;
-using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Remote.Common;
 
 namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 {
     public interface OrangeRocklandAuthenticationClient
     {
-        Task<IDictionary<string, string>> FetchPreLogInData();
-
-        Task<OrangeRocklandAuthToken> SubmitCredentials(string username, string password,
-            IDictionary<string, string> preLogInData);
+        Task<OrangeRocklandAuthToken> SubmitCredentials(string username, string password);
 
         Task LogOut();
     }
 
-//    [Component]
     internal class OrangeRocklandAuthenticationClientImpl : AbstractResource, OrangeRocklandAuthenticationClient
     {
         private const string AUTH_COOKIE_NAME = "LogCOOKPl95FnjAT";
+        private readonly OrangeRocklandClientImpl client;
 
         public OrangeRocklandAuthenticationClientImpl(OrangeRocklandClientImpl client) : base(client.ApiClient)
         {
+            this.client = client;
         }
 
         public async Task LogOut()
@@ -49,39 +44,29 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
             }
         }
 
-        public async Task<IDictionary<string, string>> FetchPreLogInData()
+        public async Task<OrangeRocklandAuthToken> SubmitCredentials(string username, string password)
         {
             UriBuilder uri = OrangeRocklandClientImpl.ApiRoot
                 .WithPathSegment("login.aspx");
 
+            IDictionary<string, string> hiddenLoginFormData;
             try
             {
-                using (HttpResponseMessage response = await HttpClient.GetAsync(uri.Uri))
-                using (IHtmlDocument html = await ReadContentAsHtml(response))
-                {
-                    return html.QuerySelectorAll("form input[type=hidden]").ToDictionary(
-                        e => e.GetAttribute("name"),
-                        e => e.GetAttribute("value"));
-                }
+                hiddenLoginFormData = await client.FetchHiddenFormData(uri.Uri);
             }
             catch (HttpRequestException e)
             {
                 throw new OrangeRocklandException("Auth Phase 1/2: Failed to fetch pre-log-in data", e);
             }
-        }
-
-        public async Task<OrangeRocklandAuthToken> SubmitCredentials(string username, string password,
-            IDictionary<string, string> preLogInData)
-        {
-            UriBuilder uri = OrangeRocklandClientImpl.ApiRoot
-                .WithPathSegment("login.aspx");
 
             var formValues = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("txtUsername", username),
                 new KeyValuePair<string, string>("txtPassword", password),
+                new KeyValuePair<string, string>("imgGo.x", "1"),
+                new KeyValuePair<string, string>("imgGo.y", "1")
             };
-            formValues.AddRange(preLogInData);
+            formValues.AddRange(hiddenLoginFormData);
 
             try
             {

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
 using DadsEnergyReporter.Injection;
@@ -27,9 +28,12 @@ namespace DadsEnergyReporter.Service
 
         public async Task<Report> GenerateReport()
         {
+            Console.WriteLine("Downloading Green Button Data from Orange & Rockland");
             GreenButtonData greenButtonData = await orangeRocklandService.GreenButton.FetchGreenButtonData();
-            GreenButtonData.MeterReading mostRecentOrangeRocklandBill = greenButtonData.meterReadings.Last();
-            DateInterval billingInterval = mostRecentOrangeRocklandBill.billingInterval;
+            GreenButtonData.MeterReading mostRecentOrangeRocklandBill = greenButtonData.MeterReadings.Last();
+            DateInterval billingInterval = mostRecentOrangeRocklandBill.BillingInterval;
+            
+            Console.WriteLine("Downloading PowerGuide solar panel report from SolarCity");
             Measurement measurement = await powerGuideService.Measurement.Measure(billingInterval);
 
             return new Report(measurement.GeneratedKilowattHours, billingInterval);

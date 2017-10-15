@@ -30,10 +30,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
 
             PowerGuideAuthToken actual = await MockLogIn();
 
-            actual.Should().Be(new PowerGuideAuthToken
-            {
-                FedAuth = "abcdef"
-            });
+            actual.Should().Be(new PowerGuideAuthToken("abcdef"));
         }
 
         private Task<PowerGuideAuthToken> MockLogIn()
@@ -46,10 +43,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
                 .Returns(credentialResponseParams);
 
             
-            A.CallTo(() => authClient.FetchAuthToken(A<IDictionary<string, string>>._)).Returns(new PowerGuideAuthToken
-            {
-                FedAuth = "abcdef"
-            });
+            A.CallTo(() => authClient.FetchAuthToken(A<IDictionary<string, string>>._)).Returns(new PowerGuideAuthToken("abcdef"));
 
             return service.GetAuthToken();
         }

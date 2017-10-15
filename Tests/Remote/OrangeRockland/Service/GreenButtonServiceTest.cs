@@ -29,12 +29,12 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
             GreenButtonData greenButtonData = await greenButtonService.FetchGreenButtonData();
 
-            greenButtonData.meterReadings.Length.Should().Be(13, "number of ns:IntervalBlocks");
-            GreenButtonData.MeterReading lastReading = greenButtonData.meterReadings.Last();
-            lastReading.energyConsumedKWh.Should().Be(0);
-            lastReading.costCents.Should().Be(2048);
-            lastReading.billingInterval.Start.Should().Be(new LocalDate(2017, 7, 17));
-            lastReading.billingInterval.End.Should().Be(new LocalDate(2017, 8, 16));
+            greenButtonData.MeterReadings.Length.Should().Be(13, "number of ns:IntervalBlocks");
+            GreenButtonData.MeterReading lastReading = greenButtonData.MeterReadings.Last();
+            lastReading.EnergyConsumedKWh.Should().Be(0);
+            lastReading.CostCents.Should().Be(2048);
+            lastReading.BillingInterval.Start.Should().Be(new LocalDate(2017, 7, 17));
+            lastReading.BillingInterval.End.Should().Be(new LocalDate(2017, 8, 16));
         }
     }
 }

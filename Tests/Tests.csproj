@@ -105,7 +105,7 @@
     <Compile Include="Remote\OrangeRockland\Client\OrangeRocklandAuthenticationClientTest.cs" />
     <Compile Include="Remote\OrangeRockland\Client\GreenButtonClientTest.cs" />
     <Compile Include="Remote\OrangeRockland\Client\OrangeRocklandClientTest.cs" />
-    <Compile Include="Remote\OrangeRockland\Service\AuthServiceTest.cs" />
+    <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandAuthenticationServiceTest.cs" />
     <Compile Include="Remote\OrangeRockland\Service\GreenButtonServiceTest.cs" />
     <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandServiceTest.cs" />
     <Compile Include="Remote\PowerGuide\Client\InstallationsTest.cs" />

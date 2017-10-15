@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
@@ -38,8 +37,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
         private async Task<OrangeRocklandAuthToken> LogIn()
         {
-            IDictionary<string, string> preLogInData = await client.OrangeRocklandAuthenticationClient.FetchPreLogInData();
-            OrangeRocklandAuthToken authToken = await client.OrangeRocklandAuthenticationClient.SubmitCredentials(Username, Password, preLogInData);
+            OrangeRocklandAuthToken authToken = await client.OrangeRocklandAuthenticationClient.SubmitCredentials(Username, Password);
             return authToken;
         }
 

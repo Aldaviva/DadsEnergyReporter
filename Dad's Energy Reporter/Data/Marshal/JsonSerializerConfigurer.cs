@@ -15,9 +15,9 @@ namespace DadsEnergyReporter.Data.Marshal
                     .ConfigureForNodaTime(DATE_TIME_ZONE_PROVIDER);
         }
 
-        public static void Configure(JsonSerializer jsonSerializer)
+        /*public static void Configure(JsonSerializer jsonSerializer)
         {
             jsonSerializer.ConfigureForNodaTime(DATE_TIME_ZONE_PROVIDER);
-        }
+        }*/
     }
 }

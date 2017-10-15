@@ -28,19 +28,19 @@ namespace DadsEnergyReporter.Service
         {
             var greenButtonData = new GreenButtonData
             {
-                meterReadings = new[]
+                MeterReadings = new[]
                 {
                     new GreenButtonData.MeterReading
                     {
-                        costCents = 0,
-                        energyConsumedKWh = 0,
-                        billingInterval = new DateInterval(new LocalDate(2017, 6, 15), new LocalDate(2017, 7, 17))
+                        CostCents = 0,
+                        EnergyConsumedKWh = 0,
+                        BillingInterval = new DateInterval(new LocalDate(2017, 6, 15), new LocalDate(2017, 7, 17))
                     },
                     new GreenButtonData.MeterReading
                     {
-                        costCents = 100,
-                        energyConsumedKWh = 200,
-                        billingInterval = new DateInterval(new LocalDate(2017, 7, 17), new LocalDate(2017, 8, 16))
+                        CostCents = 100,
+                        EnergyConsumedKWh = 200,
+                        BillingInterval = new DateInterval(new LocalDate(2017, 7, 17), new LocalDate(2017, 8, 16))
                     }
                 }
             };

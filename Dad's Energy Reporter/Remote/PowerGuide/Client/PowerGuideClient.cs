@@ -26,7 +26,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
             ZonedDateTimePattern.CreateWithCurrentCulture("uuuu-MM-ddTHH:mm:ss", null);
 
         internal static UriBuilder ApiRoot => new UriBuilder()
-            .UseHttps(true)
+            .UseHttps()
             .WithHost("mysolarcity.com")
             .WithPathSegment("solarcity-api")
             .WithPathSegment("powerguide")

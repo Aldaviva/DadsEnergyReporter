@@ -1,6 +1,7 @@
 ﻿using System.ServiceProcess;
 using System.Threading.Tasks;
 using Autofac;
+using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Service;
 
@@ -12,6 +13,8 @@ namespace DadsEnergyReporter.Entry
         {
             if (args.Length >= 1 && args[0] == "--console")
             {
+                JsonSerializerConfigurer.ConfigureDefault();
+
                 using (IContainer container = ContainerFactory.CreateContainer())
                 using (ILifetimeScope scope = container.BeginLifetimeScope())
                 {

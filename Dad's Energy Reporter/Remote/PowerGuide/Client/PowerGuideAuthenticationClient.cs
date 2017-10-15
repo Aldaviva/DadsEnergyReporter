@@ -130,7 +130,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
                             $"Auth Phase 3/3: No FedAuth cookie was set while fetching auth token from {requestUri.Uri}");
                     }
 
-                    return new PowerGuideAuthToken { FedAuth = fedAuth.Value };
+                    return new PowerGuideAuthToken(fedAuth.Value);
                 }
             }
             catch (HttpRequestException e)

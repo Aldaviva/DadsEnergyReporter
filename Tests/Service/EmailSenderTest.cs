@@ -43,7 +43,7 @@ namespace DadsEnergyReporter.Service
 
             await emailSender.SendEmail(report, recipients);
 
-            CancellationToken cancellationToken = default(CancellationToken);
+            CancellationToken cancellationToken = default;
             A.CallTo(() => smtpClient.ConnectAsync("aldaviva.com", 25, SecureSocketOptions.StartTls, cancellationToken))
                 .MustHaveHappened()
                 .Then(A.CallTo(() => smtpClient.AuthenticateAsync("user", "pass", cancellationToken))
@@ -55,7 +55,7 @@ namespace DadsEnergyReporter.Service
                         && message.Body.ContentType.MimeType.Equals(new TextPart(TextFormat.Plain).ContentType.MimeType)
                         && message.TextBody == "you generated 100 kWh between Monday, July 17, 2017 and Wednesday, August 16, 2017."
                         ),
-                    cancellationToken, default(ITransferProgress))).MustHaveHappened())
+                    cancellationToken, default)).MustHaveHappened())
                 .Then(A.CallTo(() => smtpClient.DisconnectAsync(true, cancellationToken)).MustHaveHappened());
         }
 

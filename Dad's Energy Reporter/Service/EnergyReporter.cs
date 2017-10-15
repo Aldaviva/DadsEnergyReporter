@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
-using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Properties;
@@ -28,7 +27,6 @@ namespace DadsEnergyReporter.Service
         public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender, PowerGuideAuthenticationService powerGuideAuthenticationService,
             OrangeRocklandAuthenticationService orangeRocklandAuthenticationService, DateTimeZone reportTimeZone)
         {
-            JsonSerializerConfigurer.ConfigureDefault();
             this.reportGenerator = reportGenerator;
             this.emailSender = emailSender;
             this.powerGuideAuthenticationService = powerGuideAuthenticationService;
@@ -51,6 +49,7 @@ namespace DadsEnergyReporter.Service
 
             try
             {
+                Console.WriteLine("Logging in");
                 await LogIn();
 
                 Report report = await reportGenerator.GenerateReport();
@@ -62,15 +61,18 @@ namespace DadsEnergyReporter.Service
                     return;
                 }
 
+                Console.WriteLine("Sending email report");
                 await emailSender.SendEmail(report, settings.reportRecipientEmails);
                 settings.mostRecentReportBillingDate = report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToUnixTimeMilliseconds();
                 settings.Save();
             }
             finally
             {
+                Console.WriteLine("Logging out");
                 Task.WaitAll(
                     powerGuideAuthenticationService.LogOut(),
                     orangeRocklandAuthenticationService.LogOut());
+                Console.WriteLine("Done");
             }
         }
 

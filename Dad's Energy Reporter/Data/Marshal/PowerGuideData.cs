@@ -41,7 +41,12 @@ namespace DadsEnergyReporter.Data.Marshal
 
     public class PowerGuideAuthToken
     {
-        public string FedAuth { get; set; }
+        public string FedAuth { get; }
+        
+        public PowerGuideAuthToken(string fedAuth)
+        {
+            FedAuth = fedAuth;
+        }
 
         private bool Equals(PowerGuideAuthToken other)
         {
@@ -52,7 +57,7 @@ namespace DadsEnergyReporter.Data.Marshal
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == this.GetType() && Equals((PowerGuideAuthToken) obj);
+            return obj.GetType() == GetType() && Equals((PowerGuideAuthToken) obj);
         }
 
         public override int GetHashCode()

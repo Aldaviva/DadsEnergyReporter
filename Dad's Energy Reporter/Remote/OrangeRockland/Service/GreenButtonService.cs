@@ -21,13 +21,13 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
     public struct GreenButtonData
     {
-        public MeterReading[] meterReadings;
+        public MeterReading[] MeterReadings;
 
         public struct MeterReading
         {
-            public DateInterval billingInterval;
-            public int costCents;
-            public int energyConsumedKWh;
+            public DateInterval BillingInterval;
+            public int CostCents;
+            public int EnergyConsumedKWh;
         }
     }
 
@@ -52,7 +52,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
             return new GreenButtonData
             {
-                meterReadings = intervalReadings
+                MeterReadings = intervalReadings
                     .Select(element =>
                     {
                         Instant start =
@@ -64,16 +64,16 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
                         
                         return new GreenButtonData.MeterReading
                         {
-                            energyConsumedKWh =
+                            EnergyConsumedKWh =
                                 int.Parse(element.Element(XName.Get("value", NS))?.Value ??
                                           throw new OrangeRocklandException("IntervalReading has no value child element")),
-                            billingInterval = new DateInterval(start.InZone(zone).Date, end.InZone(zone).Date),
-                            costCents = int.Parse(element.Element(XName.Get("cost", NS))?.Value ??
+                            BillingInterval = new DateInterval(start.InZone(zone).Date, end.InZone(zone).Date),
+                            CostCents = int.Parse(element.Element(XName.Get("cost", NS))?.Value ??
                                                   throw new OrangeRocklandException("IntervalReading has no cost child element")) /
                                         1000
                         };
                     })
-                    .OrderBy(reading => reading.billingInterval.End)
+                    .OrderBy(reading => reading.BillingInterval.End)
                     .ToArray()
             };
         }
