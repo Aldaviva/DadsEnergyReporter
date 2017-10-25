@@ -28,14 +28,14 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
                 new Installation
                 {
                     Guid = new Guid("45c0c40e-a9ad-11e7-abc4-cec278b6b50a"),
-                    JobId = "abc",
-                    SystemSize = 12.1
+//                    JobId = "abc",
+//                    SystemSize = 12.1
                 },
                 new Installation
                 {
                     Guid = new Guid("45c0c7b0-a9ad-11e7-abc4-cec278b6b50a"),
-                    JobId = "def",
-                    SystemSize = 6
+//                    JobId = "def",
+//                    SystemSize = 6
                 },
             });
 

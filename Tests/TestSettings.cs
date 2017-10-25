@@ -25,7 +25,11 @@ namespace DadsEnergyReporter
             new object[] { nameof(Settings.reportRecipientEmails), new List<string> { "foo@bar.com" } },
             new object[] { nameof(Settings.reportSenderEmail), "foo@bar.com" },
             new object[] { nameof(Settings.mostRecentReportBillingDate), 0L },
-            new object[] { nameof(Settings.mostRecentReportBillingDate), 1507189000194L }
+            new object[] { nameof(Settings.mostRecentReportBillingDate), 1507189000194L },
+            new object[] { nameof(Settings.httpProxy), "127.0.0.1:9998" },
+            new object[] { nameof(Settings.httpProxy), " " },
+            new object[] { nameof(Settings.httpProxy), "" },
+            new object[] { nameof(Settings.httpProxy), null }
         };
 
         public static IEnumerable<object[]> InvalidSettings => new[]
@@ -68,7 +72,8 @@ namespace DadsEnergyReporter
             new object[] { nameof(Settings.reportSenderEmail), "a@b.com;c@d.com" },
             new object[] { nameof(Settings.reportSenderEmail), "a@b.com, c@d.com" },
             new object[] { nameof(Settings.reportSenderEmail), "a@b.com; c@d.com" },
-            new object[] { nameof(Settings.mostRecentReportBillingDate), -1L }
+            new object[] { nameof(Settings.mostRecentReportBillingDate), -1L },
+            new object[] { nameof(Settings.httpProxy), ":9998" }
         };
 
         [Fact]

@@ -49,7 +49,7 @@ namespace DadsEnergyReporter.Service
 
             if (HaveSentReportTooRecently(mostRecentReportBillingDate))
             {
-                LOGGER.Info("Report was already sent recently (on {0}), not checking again now.", mostRecentReportBillingDate);
+                LOGGER.Info("Report was already created and sent for billing cycle ending on {0}, which is too recent. Not checking again now.", mostRecentReportBillingDate.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).Date);
                 return;
             }
 

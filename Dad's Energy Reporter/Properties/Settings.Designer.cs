@@ -154,5 +154,17 @@ namespace DadsEnergyReporter.Properties {
                 this["smtpPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string httpProxy {
+            get {
+                return ((string)(this["httpProxy"]));
+            }
+            set {
+                this["httpProxy"] = value;
+            }
+        }
     }
 }

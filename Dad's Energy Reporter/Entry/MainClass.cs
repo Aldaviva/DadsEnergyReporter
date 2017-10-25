@@ -13,8 +13,8 @@ namespace DadsEnergyReporter.Entry
         {
             JsonSerializerConfigurer.ConfigureDefault();
             
-            if (args.Length >= 1 && args[0] == "--console")
-            {
+            /*if (args.Length >= 1 && args[0] == "--console")
+            {*/
                 using (IContainer container = ContainerFactory.CreateContainer())
                 using (ILifetimeScope scope = container.BeginLifetimeScope())
                 {
@@ -24,11 +24,11 @@ namespace DadsEnergyReporter.Entry
                     // block program from exiting until `start` completes
                     start.GetAwaiter().GetResult();
                 }
-            }
+            /*}
             else
             {
                 ServiceBase.Run(new DadsEnergyReporter());
-            }
+            }*/
         }
     }
 }

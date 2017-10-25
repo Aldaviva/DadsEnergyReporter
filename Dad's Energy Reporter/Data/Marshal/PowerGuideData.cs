@@ -23,13 +23,13 @@ namespace DadsEnergyReporter.Data.Marshal
     public class Installation
     {
         public Guid Guid { get; set; }
-        public double SystemSize { get; set; }
-        public string JobId { get; set; }
+//        public double SystemSize { get; set; }
+//        public string JobId { get; set; }
     }
 
     public class InstallationsResponse
     {
-        public int ResultTotal { get; set; }
+//        public int ResultTotal { get; set; }
         public List<Installation> Data { get; set; }
     }
 

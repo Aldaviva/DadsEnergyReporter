@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using Autofac;
+using DadsEnergyReporter.Properties;
 
 namespace DadsEnergyReporter.Injection
 {
@@ -14,7 +15,7 @@ namespace DadsEnergyReporter.Injection
             builder.Register(c => new HttpClientHandler
             {
                 CookieContainer = c.Resolve<CookieContainer>(),
-                Proxy = new WebProxy("127.0.0.1", 9998) // Fiddler
+                Proxy = string.IsNullOrWhiteSpace(Settings.Default.httpProxy) ? null : new WebProxy(Settings.Default.httpProxy)
             }).As<HttpMessageHandler>().SingleInstance();
 
             builder.Register(c => new HttpClient(c.Resolve<HttpMessageHandler>())

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
 using DadsEnergyReporter.Exceptions;
 using MimeKit;
 
@@ -74,6 +76,21 @@ namespace DadsEnergyReporter.Properties
             {
                 throw new SettingsException("mostRecentReportBillingDate", mostRecentReportBillingDate,
                     "malformed date of most recent billing cycle end");
+            }
+
+            if (!string.IsNullOrWhiteSpace(httpProxy))
+            {
+                try
+                {
+                    // ReSharper disable once ObjectCreationAsStatement - testing if constructor throws exception
+                    new WebProxy(httpProxy);
+                }
+                catch (UriFormatException)
+                {
+                    throw new SettingsException("httpProxy", httpProxy,
+                        "may specify the host (domain or IP) and optionally port number of an HTTP proxy server to use for outgoing connections (e.g. \"127.0.0.1\" or \"myserver.com:8080\"), " +
+                        "or may be left blank (the default) to use a direct HTTP connection");
+                }
             }
         }
 
