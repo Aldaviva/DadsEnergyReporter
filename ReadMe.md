@@ -31,6 +31,24 @@ I wrote a program that can be run periodically to send an email report of electr
 1. Persist the billing date to avoid resending the report for the same billing interval the next time this program runs
 1. Exit
 
+## Usage
+1. Make sure you have [.NET Framework 4.7](https://www.microsoft.com/en-us/download/details.aspx?id=55170) or later installed
+1. Download the [latest release](https://github.com/Aldaviva/DadsEnergyReporter/releases) (the ZIP file, but not the source code one)
+1. Extract the ZIP file
+1. Edit `DadsEnergyReporter.exe.config` and set the `<value></value>` of each Setting
+    - `solarCityUsername` is the email address you use to log in to [MySolarCity](https://mysolarcity.com/)
+    - `solarCityPassword` is the password you use to log in to MySolarCity
+    - `orangeRocklandUsername` is the username you use to log in to [Orange & Rockland My Account](https://apps.coned.com/ORMyAccount/Forms/login.aspx)
+    - `orangeRocklandPassword` is the password you use to log in to Orange & Rockland My Account
+    - `reportSenderEmail` is the email address that will appear in the From field of report emails that are sent to you
+    - `reportRecipientEmails` are the email addresses to which report emails will be sent. To send reports to more than one email address, add additional `<string>your@email.com</string>` elements.
+    - `smtpHost` is the hostname or IP address of the server that you use to send outgoing email. The server must support STARTTLS authentication.
+    - `smtpPort` is the TCP port number of the server that you use to send outgoing email
+    - `smtpUsername` is the username that you use to log in to the server that sends your outgoing email. Required, no anonymous SMTP allowed.
+    - `smtpPassword` is the password that you use to log in to the server that sends your outgoing email. Required, no anonymous SMTP allowed.
+1. Run `DadsEnergyReporter.exe`. Logs appear in the command prompt output.
+1. Check your email for the usage report
+
 ## Project Information
 
 - Runs in .NET Framework 4.7
