@@ -41,7 +41,8 @@ namespace DadsEnergyReporter.Service
             LOGGER.Debug("Generated {0} kWh of electricity between {1} and {2}", measurement.GeneratedKilowattHours, mostRecentOrangeRocklandBill.BillingInterval.Start,
                 mostRecentOrangeRocklandBill.BillingInterval.End);
 
-            return new Report(measurement.GeneratedKilowattHours, mostRecentOrangeRocklandBill.BillingInterval);
+            return new Report(mostRecentOrangeRocklandBill.BillingInterval, measurement.GeneratedKilowattHours,
+                mostRecentOrangeRocklandBill.EnergyConsumedKWh, mostRecentOrangeRocklandBill.CostCents);
         }
     }
 }

@@ -9,7 +9,6 @@ using DadsEnergyReporter.Properties;
 using MailKit;
 using MailKit.Security;
 using MimeKit;
-using MimeKit.Text;
 
 namespace DadsEnergyReporter.Service
 {
@@ -23,22 +22,17 @@ namespace DadsEnergyReporter.Service
     {
         private readonly IMailTransport smtpClient;
         private readonly Settings settings = Settings.Default;
+        private readonly ReportFormatter reportFormatter;
 
-        public EmailSenderImpl(IMailTransport smtpClient)
+        public EmailSenderImpl(IMailTransport smtpClient, ReportFormatter reportFormatter)
         {
             this.smtpClient = smtpClient;
+            this.reportFormatter = reportFormatter;
         }
 
         public async Task SendEmail(Report report, IEnumerable<string> recipients)
         {
-            var message = new MimeMessage()
-            {
-                Subject = report.Subject,
-                Body = new TextPart(TextFormat.Plain)
-                {
-                    Text = report.Body
-                }
-            };
+            MimeMessage message = reportFormatter.FormatReport(report);
             message.From.Add(new MailboxAddress("Dad's Energy Reporter", settings.reportSenderEmail));
             message.To.AddRange(recipients.Select(recipient => new MailboxAddress(recipient)));
 

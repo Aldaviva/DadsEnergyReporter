@@ -39,7 +39,7 @@ namespace DadsEnergyReporter.Service
             settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
             settings.reportSenderEmail = "dadsenergyreporter@aldaviva.com";
 
-            var report = new Report(100, new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)));
+            var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 2, 2000);
             A.CallTo(() => reportGenerator.GenerateReport()).Returns(report);
 
             await energyReporter.Start();
@@ -87,7 +87,7 @@ namespace DadsEnergyReporter.Service
             settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
             settings.reportSenderEmail = "dadsenergyreporter@aldaviva.com";
 
-            var report = new Report(100, new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)));
+            var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 20, 3000);
             A.CallTo(() => reportGenerator.GenerateReport()).Returns(report);
             
             await energyReporter.Start();

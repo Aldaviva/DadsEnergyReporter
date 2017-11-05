@@ -4,17 +4,19 @@ namespace DadsEnergyReporter.Data
 {
     public class Report
     {
-        private readonly double _powerGenerated;
-        private readonly DateInterval _billingInterval;
+        public DateInterval BillingInterval { get; }
+        public double PowerGenerated { get; }
+        public int PowerBought { get; }
+        public int PowerCostCents { get; }
 
-        public string Subject => "monthly kwh report";
-        public string Body => $"you generated {_powerGenerated} kWh between {_billingInterval.Start} and {_billingInterval.End}.";
-        public LocalDate BillingDate => _billingInterval.End;
+        public LocalDate BillingDate => BillingInterval.End;
 
-        public Report(double powerGenerated, DateInterval billingInterval)
+        public Report(DateInterval billingInterval, double powerGenerated, int powerBought, int powerCostCents)
         {
-            _powerGenerated = powerGenerated;
-            _billingInterval = billingInterval;
+            PowerGenerated = powerGenerated;
+            PowerBought = powerBought;
+            PowerCostCents = powerCostCents;
+            BillingInterval = billingInterval;
         }
     }
 }

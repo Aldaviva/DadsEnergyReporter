@@ -54,8 +54,11 @@ namespace DadsEnergyReporter.Service
 
             Report report = await reportGenerator.GenerateReport();
 
-            report.Subject.Should().Be("monthly kwh report");
-            report.Body.Should().Be("you generated 3000 kWh between Monday, July 17, 2017 and Wednesday, August 16, 2017.");
+            report.PowerGenerated.Should().Be(3000);
+            report.PowerBought.Should().Be(200);
+            report.PowerCostCents.Should().Be(100);
+            report.BillingInterval.Start.Should().Be(new LocalDate(2017, 7, 17));
+            report.BillingInterval.End.Should().Be(new LocalDate(2017, 8, 16));
             report.BillingDate.Should().Be(new LocalDate(2017, 8, 16));
 
             A.CallTo(() => orangeRocklandService.GreenButton.FetchGreenButtonData()).MustHaveHappened();

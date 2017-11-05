@@ -11,7 +11,6 @@ using FluentAssertions;
 using MailKit;
 using MailKit.Security;
 using MimeKit;
-using MimeKit.Text;
 using NodaTime;
 using Xunit;
 
@@ -21,10 +20,11 @@ namespace DadsEnergyReporter.Service
     {
         private readonly EmailSenderImpl emailSender;
         private readonly IMailTransport smtpClient = A.Fake<IMailTransport>();
+        private readonly ReportFormatter reportFormatter = A.Fake<ReportFormatter>();
 
         public EmailSenderTest()
         {
-            emailSender = new EmailSenderImpl(smtpClient);
+            emailSender = new EmailSenderImpl(smtpClient, reportFormatter);
         }
 
         [Fact]
@@ -39,38 +39,38 @@ namespace DadsEnergyReporter.Service
             settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
 
             var recipients = new List<string> { "ben@aldaviva.com" };
-            var report = new Report(100, new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)));
+            var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 0, 2000);
+
+            var expectedMessage = new MimeMessage
+            {
+                Subject = "expected message"
+            };
+            A.CallTo(() => reportFormatter.FormatReport(A<Report>._)).Returns(expectedMessage);
 
             await emailSender.SendEmail(report, recipients);
 
             CancellationToken cancellationToken = default;
             A.CallTo(() => smtpClient.ConnectAsync("aldaviva.com", 25, SecureSocketOptions.StartTls, cancellationToken))
                 .MustHaveHappened()
-                .Then(A.CallTo(() => smtpClient.AuthenticateAsync("user", "pass", cancellationToken))
-                    .MustHaveHappened())
+                .Then(A.CallTo(() => smtpClient.AuthenticateAsync("user", "pass", cancellationToken)).MustHaveHappened())
                 .Then(A.CallTo(() => smtpClient.SendAsync(A<MimeMessage>.That.Matches(message =>
-                    message.From.Equals(new InternetAddressList(new List<InternetAddress> { new MailboxAddress("Dad's Energy Reporter", "reportsender@aldaviva.com") }))
-                        && message.To.Equals(new InternetAddressList(new List<InternetAddress> { new MailboxAddress("ben@aldaviva.com") }))
-                        && message.Subject == "monthly kwh report"
-                        && message.Body.ContentType.MimeType.Equals(new TextPart(TextFormat.Plain).ContentType.MimeType)
-                        && message.TextBody == "you generated 100 kWh between Monday, July 17, 2017 and Wednesday, August 16, 2017."
-                        ),
-                    cancellationToken, default)).MustHaveHappened())
+                    message.Subject == "expected message"), cancellationToken, default)).MustHaveHappened())
                 .Then(A.CallTo(() => smtpClient.DisconnectAsync(true, cancellationToken)).MustHaveHappened());
         }
 
         [Fact]
         public void SendEmailFailure()
         {
-            A.CallTo(() => smtpClient.ConnectAsync(A<string>._, A<int>._, A<SecureSocketOptions>._, default(CancellationToken))).ThrowsAsync(new IOException());
-            
+            A.CallTo(() => smtpClient.ConnectAsync(A<string>._, A<int>._, A<SecureSocketOptions>._, default))
+                .ThrowsAsync(new IOException());
+
             Settings settings = Settings.Default;
             settings.smtpHost = "aldaviva.com";
             settings.smtpPort = 25;
 
             var recipients = new List<string> { "ben@aldaviva.com" };
-            var report = new Report(100, new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)));
-            
+            var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 0, 2000);
+
             Func<Task> thrower = async () => await emailSender.SendEmail(report, recipients);
 
             thrower.ShouldThrow<EmailException>().WithMessage("Failed to send email message");
