@@ -6,6 +6,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
     {
         OrangeRocklandAuthenticationService Authentication { get; }
         GreenButtonService GreenButton { get; }
+        BillDocumentService BillDocuments { get; }
     }
 
     [Component]
@@ -13,11 +14,14 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
     {
         public OrangeRocklandAuthenticationService Authentication { get; }
         public GreenButtonService GreenButton { get; }
+        public BillDocumentService BillDocuments { get; }
 
-        public OrangeRocklandServiceImpl(OrangeRocklandAuthenticationService orangeRocklandAuthentication, GreenButtonService greenButtonService)
+        public OrangeRocklandServiceImpl(OrangeRocklandAuthenticationService orangeRocklandAuthentication,
+            GreenButtonService greenButtonService, BillDocumentService billDocuments)
         {
             Authentication = orangeRocklandAuthentication;
             GreenButton = greenButtonService;
+            BillDocuments = billDocuments;
         }
     }
 }

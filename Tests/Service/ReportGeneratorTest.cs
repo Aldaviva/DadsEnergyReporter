@@ -33,13 +33,13 @@ namespace DadsEnergyReporter.Service
                     new GreenButtonData.MeterReading
                     {
                         CostCents = 0,
-                        EnergyConsumedKWh = 0,
+//                        EnergyConsumedKWh = 0,
                         BillingInterval = new DateInterval(new LocalDate(2017, 6, 15), new LocalDate(2017, 7, 17))
                     },
                     new GreenButtonData.MeterReading
                     {
                         CostCents = 100,
-                        EnergyConsumedKWh = 200,
+//                        EnergyConsumedKWh = 200,
                         BillingInterval = new DateInterval(new LocalDate(2017, 7, 17), new LocalDate(2017, 8, 16))
                     }
                 }
@@ -55,7 +55,7 @@ namespace DadsEnergyReporter.Service
             Report report = await reportGenerator.GenerateReport();
 
             report.PowerGenerated.Should().Be(3000);
-            report.PowerBought.Should().Be(200);
+            report.PowerBoughtOrSold.Should().Be(200);
             report.PowerCostCents.Should().Be(100);
             report.BillingInterval.Start.Should().Be(new LocalDate(2017, 7, 17));
             report.BillingInterval.End.Should().Be(new LocalDate(2017, 8, 16));

@@ -19,7 +19,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         public OrangeRocklandAuthenticationServiceTest()
         {
             orangeRocklandAuthenticationService = new OrangeRocklandAuthenticationServiceImpl(client);
-            A.CallTo(() => client.OrangeRocklandAuthenticationClient).Returns(authClient);
+            A.CallTo(() => client.Authentication).Returns(authClient);
         }
 
         [Fact]

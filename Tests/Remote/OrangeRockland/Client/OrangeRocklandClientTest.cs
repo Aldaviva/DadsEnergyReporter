@@ -39,8 +39,8 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         [Fact]
         public void Resources()
         {
-            client.OrangeRocklandAuthenticationClient.Should().BeOfType<OrangeRocklandAuthenticationClientImpl>();
-            client.GreenButtonClient.Should().BeOfType<GreenButtonClientImpl>();
+            client.Authentication.Should().BeOfType<OrangeRocklandAuthenticationClientImpl>();
+            client.GreenButton.Should().BeOfType<GreenButtonClientImpl>();
         }
 
         [Fact]

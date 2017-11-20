@@ -4,3 +4,4 @@ bin
 *.snk
 obj
 *.user
+/Research

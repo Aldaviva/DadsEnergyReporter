@@ -27,7 +27,6 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         {
             public DateInterval BillingInterval;
             public int CostCents;
-            public int EnergyConsumedKWh;
         }
     }
 
@@ -47,13 +46,12 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
         public async Task<GreenButtonData> FetchGreenButtonData()
         {
-            XDocument doc = await client.GreenButtonClient.FetchGreenButtonData();
+            XDocument doc = await client.GreenButton.FetchGreenButtonData();
             IEnumerable<XElement> intervalReadings = doc.Descendants(XName.Get("IntervalReading", NS));
 
             return new GreenButtonData
             {
-                MeterReadings = intervalReadings
-                    .Select(element =>
+                MeterReadings = intervalReadings.Select(element =>
                     {
                         Instant start =
                             Instant.FromUnixTimeSeconds(long.Parse(element.Descendants(XName.Get("start", NS)).First().Value));
@@ -62,9 +60,6 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
                         return new GreenButtonData.MeterReading
                         {
-                            EnergyConsumedKWh =
-                                int.Parse(element.Element(XName.Get("value", NS))?.Value ??
-                                          throw new OrangeRocklandException("IntervalReading has no value child element")),
                             BillingInterval = new DateInterval(start.InZone(zone).Date, end.InZone(zone).Date),
                             CostCents = int.Parse(element.Element(XName.Get("cost", NS))?.Value ??
                                                   throw new OrangeRocklandException("IntervalReading has no cost child element")) /

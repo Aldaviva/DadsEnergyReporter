@@ -20,36 +20,39 @@ namespace DadsEnergyReporter.Service
     internal class EnergyReporterImpl : EnergyReporter
     {
         private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
-        
+
         private readonly ReportGenerator reportGenerator;
         private readonly EmailSender emailSender;
         private readonly PowerGuideService powerGuideService;
         private readonly OrangeRocklandService orangeRocklandService;
         private readonly DateTimeZone reportTimeZone;
+        private readonly Settings settings;
 
         public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender, PowerGuideService powerGuideService,
-            OrangeRocklandService orangeRocklandService, DateTimeZone reportTimeZone)
+            OrangeRocklandService orangeRocklandService, DateTimeZone reportTimeZone, Settings settings)
         {
             this.reportGenerator = reportGenerator;
             this.emailSender = emailSender;
             this.powerGuideService = powerGuideService;
             this.orangeRocklandService = orangeRocklandService;
             this.reportTimeZone = reportTimeZone;
+            this.settings = settings;
         }
 
         public async Task Start()
         {
             LOGGER.Info("Dad's Energy Reporter {0}", Assembly.GetExecutingAssembly().GetName().Version);
-            
+
             LOGGER.Debug("Validating settings");
-            Settings settings = Settings.Default;
             ValidateSettings(settings);
 
             Instant mostRecentReportBillingDate = Instant.FromUnixTimeMilliseconds(settings.mostRecentReportBillingDate);
 
             if (HaveSentReportTooRecently(mostRecentReportBillingDate))
             {
-                LOGGER.Info("Report was already created and sent for billing cycle ending on {0}, which is too recent. Not checking again now.", mostRecentReportBillingDate.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).Date);
+                LOGGER.Info(
+                    "Report was already created and sent for billing cycle ending on {0}, which is too recent. Not checking again now.",
+                    mostRecentReportBillingDate.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).Date);
                 return;
             }
 
@@ -62,13 +65,15 @@ namespace DadsEnergyReporter.Service
 
                 if (HaveAlreadySentReport(mostRecentReportBillingDate, report))
                 {
-                    LOGGER.Info("Report has already been sent for billing cycle ending on {0}, not sending again.", report.BillingDate);
+                    LOGGER.Info("Report has already been sent for billing cycle ending on {0}, not sending again.",
+                        report.BillingDate);
                     return;
                 }
 
                 LOGGER.Info("Sending email report");
                 await emailSender.SendEmail(report, settings.reportRecipientEmails);
-                settings.mostRecentReportBillingDate = report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToUnixTimeMilliseconds();
+                settings.mostRecentReportBillingDate =
+                    report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToUnixTimeMilliseconds();
                 settings.Save();
             }
             finally
@@ -83,8 +88,6 @@ namespace DadsEnergyReporter.Service
 
         internal Task LogIn()
         {
-            Settings settings = Settings.Default;
-
             orangeRocklandService.Authentication.Username = settings.orangeRocklandUsername;
             orangeRocklandService.Authentication.Password = settings.orangeRocklandPassword;
             powerGuideService.Authentication.Username = settings.solarCityUsername;
@@ -97,7 +100,8 @@ namespace DadsEnergyReporter.Service
 
         internal bool HaveSentReportTooRecently(Instant mostRecentReportBillingDate)
         {
-            double daysSinceLastReportGenerated = new Interval(mostRecentReportBillingDate, SystemClock.Instance.GetCurrentInstant()).Duration.TotalDays;
+            double daysSinceLastReportGenerated =
+                new Interval(mostRecentReportBillingDate, SystemClock.Instance.GetCurrentInstant()).Duration.TotalDays;
             return daysSinceLastReportGenerated < 28;
         }
 

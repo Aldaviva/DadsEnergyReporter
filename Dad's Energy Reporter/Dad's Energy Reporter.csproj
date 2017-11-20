@@ -92,6 +92,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.12.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.12\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
@@ -107,8 +110,8 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NodaTime, Version=2.2.2.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NodaTime.2.2.2\lib\net45\NodaTime.dll</HintPath>
+    <Reference Include="NodaTime, Version=2.2.3.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NodaTime.2.2.3\lib\net45\NodaTime.dll</HintPath>
     </Reference>
     <Reference Include="NodaTime.Serialization.JsonNet, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
       <HintPath>..\packages\NodaTime.Serialization.JsonNet.2.0.0\lib\net45\NodaTime.Serialization.JsonNet.dll</HintPath>
@@ -116,6 +119,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
@@ -129,21 +133,18 @@
     <Compile Include="Data\Marshal\JsonSerializerConfigurer.cs" />
     <Compile Include="Data\Marshal\OrangeRocklandData.cs" />
     <Compile Include="Injection\MailKitModule.cs" />
+    <Compile Include="Injection\SettingsModule.cs" />
     <Compile Include="Injection\TimeZoneModule.cs" />
+    <Compile Include="Remote\OrangeRockland\Client\BillDocumentClient.cs" />
     <Compile Include="Remote\OrangeRockland\Client\GreenButtonClient.cs" />
     <Compile Include="Exceptions\OrangeRocklandException.cs" />
+    <Compile Include="Remote\OrangeRockland\Service\BillDocumentService.cs" />
     <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandAuthenticationService.cs" />
     <Compile Include="Remote\OrangeRockland\Service\GreenButtonService.cs" />
     <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandService.cs" />
     <Compile Include="Data\Marshal\PowerGuideData.cs" />
     <Compile Include="Injection\ContainerFactory.cs" />
     <Compile Include="Injection\AutowiredAttribute.cs" />
-    <Compile Include="Entry\Service.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Entry\Service.Designer.cs">
-      <DependentUpon>Service.cs</DependentUpon>
-    </Compile>
     <Compile Include="Entry\MainClass.cs" />
     <Compile Include="Injection\HttpClientModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -186,7 +187,9 @@
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -200,11 +203,6 @@
     <None Include="Remote\OrangeRockland\Client\schema\espi.xsd">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Entry\Service.resx">
-      <DependentUpon>Service.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Injection\ComponentAttribute.cs" />

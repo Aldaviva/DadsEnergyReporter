@@ -17,28 +17,29 @@ namespace DadsEnergyReporter.Service
         private readonly EmailSender emailSender = A.Fake<EmailSender>();
         private readonly PowerGuideAuthenticationService powerGuideAuthenticationService = A.Fake<PowerGuideAuthenticationService>();
         private readonly OrangeRocklandAuthenticationService orangeRocklandAuthenticationService = A.Fake<OrangeRocklandAuthenticationService>();
+        private readonly Settings settings = new Settings
+        {
+            orangeRocklandUsername = "oruUser",
+            orangeRocklandPassword = "oruPass",
+            solarCityUsername = "solarcityUser",
+            solarCityPassword = "solarcityPass",
+            mostRecentReportBillingDate = 0,
+            reportRecipientEmails = new List<string> { "ben@aldaviva.com" },
+            reportSenderEmail = "dadsenergyreporter@aldaviva.com"
+        };
 
         private static readonly DateTimeZone ZONE = DateTimeZoneProviders.Tzdb["America/New_York"];
 
         public EnergyReporterTest()
         {
             var powerGuideService = new PowerGuideServiceImpl(powerGuideAuthenticationService, null, null);
-            var orangeRocklandService = new OrangeRocklandServiceImpl(orangeRocklandAuthenticationService, null);
-            energyReporter = new EnergyReporterImpl(reportGenerator, emailSender, powerGuideService, orangeRocklandService, ZONE);
+            var orangeRocklandService = new OrangeRocklandServiceImpl(orangeRocklandAuthenticationService, null, null);
+            energyReporter = new EnergyReporterImpl(reportGenerator, emailSender, powerGuideService, orangeRocklandService, ZONE, settings);
         }
 
         [Fact]
         public async void Normal()
         {
-            Settings settings = Settings.Default;
-            settings.orangeRocklandUsername = "oruUser";
-            settings.orangeRocklandPassword = "oruPass";
-            settings.solarCityUsername = "solarcityUser";
-            settings.solarCityPassword = "solarcityPass";
-            settings.mostRecentReportBillingDate = 0;
-            settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
-            settings.reportSenderEmail = "dadsenergyreporter@aldaviva.com";
-
             var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 2, 2000);
             A.CallTo(() => reportGenerator.GenerateReport()).Returns(report);
 
@@ -58,14 +59,7 @@ namespace DadsEnergyReporter.Service
         [Fact]
         public async void SkipsIfTooFewDaysSinceLastReport()
         {
-            Settings settings = Settings.Default;
-            settings.orangeRocklandUsername = "oruUser";
-            settings.orangeRocklandPassword = "oruPass";
-            settings.solarCityUsername = "solarcityUser";
-            settings.solarCityPassword = "solarcityPass";
             settings.mostRecentReportBillingDate = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(27)).ToUnixTimeMilliseconds();
-            settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
-            settings.reportSenderEmail = "dadsenergyreporter@aldaviva.com";
 
             await energyReporter.Start();
 
@@ -78,14 +72,7 @@ namespace DadsEnergyReporter.Service
         [Fact]
         public async void SkipsIfAlreadySentReport()
         {
-            Settings settings = Settings.Default;
-            settings.orangeRocklandUsername = "oruUser";
-            settings.orangeRocklandPassword = "oruPass";
-            settings.solarCityUsername = "solarcityUser";
-            settings.solarCityPassword = "solarcityPass";
             settings.mostRecentReportBillingDate = new LocalDate(2017, 08, 16).AtStartOfDayInZone(ZONE).ToInstant().ToUnixTimeMilliseconds();
-            settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
-            settings.reportSenderEmail = "dadsenergyreporter@aldaviva.com";
 
             var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 20, 3000);
             A.CallTo(() => reportGenerator.GenerateReport()).Returns(report);

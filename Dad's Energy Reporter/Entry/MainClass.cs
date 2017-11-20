@@ -1,5 +1,4 @@
-﻿using System.ServiceProcess;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Autofac;
 using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Injection;
@@ -9,26 +8,19 @@ namespace DadsEnergyReporter.Entry
 {
     public static class MainClass
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             JsonSerializerConfigurer.ConfigureDefault();
-            
-            /*if (args.Length >= 1 && args[0] == "--console")
-            {*/
-                using (IContainer container = ContainerFactory.CreateContainer())
-                using (ILifetimeScope scope = container.BeginLifetimeScope())
-                {
-                    var energyReporter = scope.Resolve<EnergyReporter>();
-                    Task start = energyReporter.Start();
-                    
-                    // block program from exiting until `start` completes
-                    start.GetAwaiter().GetResult();
-                }
-            /*}
-            else
+
+            using (IContainer container = ContainerFactory.CreateContainer())
+            using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
-                ServiceBase.Run(new DadsEnergyReporter());
-            }*/
+                var energyReporter = scope.Resolve<EnergyReporter>();
+                Task start = energyReporter.Start();
+
+                // block program from exiting until `start` completes
+                start.GetAwaiter().GetResult();
+            }
         }
     }
 }

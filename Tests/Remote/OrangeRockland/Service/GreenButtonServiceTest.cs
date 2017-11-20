@@ -18,7 +18,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         public GreenButtonServiceTest()
         {
             greenButtonService = new GreenButtonServiceImpl(oruClient, ZONE);
-            A.CallTo(() => oruClient.GreenButtonClient).Returns(greenButtonClient);
+            A.CallTo(() => oruClient.GreenButton).Returns(greenButtonClient);
         }
 
         [Fact]
@@ -31,7 +31,6 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
 
             greenButtonData.MeterReadings.Length.Should().Be(13, "number of ns:IntervalBlocks");
             GreenButtonData.MeterReading lastReading = greenButtonData.MeterReadings.Last();
-            lastReading.EnergyConsumedKWh.Should().Be(0);
             lastReading.CostCents.Should().Be(2048);
             lastReading.BillingInterval.Start.Should().Be(new LocalDate(2017, 7, 17));
             lastReading.BillingInterval.End.Should().Be(new LocalDate(2017, 8, 16));

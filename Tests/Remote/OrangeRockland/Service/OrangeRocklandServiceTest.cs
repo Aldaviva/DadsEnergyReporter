@@ -9,10 +9,11 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         private readonly OrangeRocklandServiceImpl orangeRocklandService;
         private readonly GreenButtonService greenButtonService = A.Fake<GreenButtonService>();
         private readonly OrangeRocklandAuthenticationService orangeRocklandAuthentication = A.Fake<OrangeRocklandAuthenticationService>();
+        private readonly BillDocumentService billDocumentService = A.Fake<BillDocumentService>();
 
         public OrangeRocklandServiceTest()
         {
-            orangeRocklandService = new OrangeRocklandServiceImpl(orangeRocklandAuthentication, greenButtonService);
+            orangeRocklandService = new OrangeRocklandServiceImpl(orangeRocklandAuthentication, greenButtonService, billDocumentService);
         }
 
         [Fact]

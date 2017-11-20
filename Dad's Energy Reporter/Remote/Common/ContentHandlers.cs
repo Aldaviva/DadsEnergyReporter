@@ -1,10 +1,11 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using AngleSharp;
 using AngleSharp.Dom.Html;
-using AngleSharp.Parser.Html;
 using DadsEnergyReporter.Injection;
 using Newtonsoft.Json;
 
@@ -22,7 +23,6 @@ namespace DadsEnergyReporter.Remote.Common
     internal class DefaultContentHandlers : ContentHandlers
     {
         private static readonly JsonSerializer JSON_SERIALIZER = JsonSerializer.CreateDefault();
-        private static readonly HtmlParser HTML_PARSER = new HtmlParser();
 
         public async Task<T> ReadContentAsJson<T>(HttpResponseMessage response)
         {
@@ -56,10 +56,14 @@ namespace DadsEnergyReporter.Remote.Common
         public async Task<IHtmlDocument> ReadContentAsHtml(HttpResponseMessage response)
         {
             response.EnsureSuccessStatusCode();
-            using (Stream responseStream = await response.Content.ReadAsStreamAsync())
-            {
-                return await HTML_PARSER.ParseAsync(responseStream);
-            }
+            Stream responseStream = await response.Content.ReadAsStreamAsync();
+            IBrowsingContext browsingContext = BrowsingContext.New();
+            return await browsingContext.OpenAsync(virtualResponse => virtualResponse
+                .Address(response.RequestMessage.RequestUri)
+                .Status(response.StatusCode)
+                .Headers(response.Headers.ToDictionary(pair => pair.Key, pair => pair.Value.First()))
+                .Content(responseStream)
+            ) as IHtmlDocument;
         }
     }
 }

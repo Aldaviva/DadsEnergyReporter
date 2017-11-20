@@ -21,13 +21,14 @@ namespace DadsEnergyReporter.Service
     internal class EmailSenderImpl : EmailSender
     {
         private readonly IMailTransport smtpClient;
-        private readonly Settings settings = Settings.Default;
+        private readonly Settings settings;
         private readonly ReportFormatter reportFormatter;
 
-        public EmailSenderImpl(IMailTransport smtpClient, ReportFormatter reportFormatter)
+        public EmailSenderImpl(IMailTransport smtpClient, ReportFormatter reportFormatter, Settings settings)
         {
             this.smtpClient = smtpClient;
             this.reportFormatter = reportFormatter;
+            this.settings = settings;
         }
 
         public async Task SendEmail(Report report, IEnumerable<string> recipients)

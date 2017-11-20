@@ -41,7 +41,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         private async Task<OrangeRocklandAuthToken> LogIn()
         {
             LOGGER.Debug("Logging in to Orange & Rockland as {0}", Username);
-            OrangeRocklandAuthToken authToken = await client.OrangeRocklandAuthenticationClient.SubmitCredentials(Username, Password);
+            OrangeRocklandAuthToken authToken = await client.Authentication.SubmitCredentials(Username, Password);
             LOGGER.Debug("Logged into Orange & Rockland");
             return authToken;
         }
@@ -52,7 +52,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
             {
                 try
                 {
-                    await client.OrangeRocklandAuthenticationClient.LogOut();
+                    await client.Authentication.LogOut();
                 }
                 catch (OrangeRocklandException)
                 {

@@ -32,8 +32,11 @@ namespace DadsEnergyReporter.Service
             LOGGER.Info("Downloading Green Button Data from Orange & Rockland");
             GreenButtonData greenButtonData = await orangeRocklandService.GreenButton.FetchGreenButtonData();
             GreenButtonData.MeterReading mostRecentOrangeRocklandBill = greenButtonData.MeterReadings.Last();
+            LOGGER.Info("Downloading bill from Orange & Rockland");
+            int energyPurchasedOrSold = await orangeRocklandService.BillDocuments.FetchEnergyPurchasedOrSoldKWh(mostRecentOrangeRocklandBill
+                .BillingInterval.End);
             LOGGER.Debug("Paid ${0} to use {1} kWh of electricity between {2} and {3}", mostRecentOrangeRocklandBill.CostCents / 100,
-                mostRecentOrangeRocklandBill.EnergyConsumedKWh, mostRecentOrangeRocklandBill.BillingInterval.Start,
+                energyPurchasedOrSold, mostRecentOrangeRocklandBill.BillingInterval.Start,
                 mostRecentOrangeRocklandBill.BillingInterval.End);
 
             LOGGER.Info("Downloading PowerGuide solar panel report from SolarCity");
@@ -42,7 +45,7 @@ namespace DadsEnergyReporter.Service
                 mostRecentOrangeRocklandBill.BillingInterval.End);
 
             return new Report(mostRecentOrangeRocklandBill.BillingInterval, measurement.GeneratedKilowattHours,
-                mostRecentOrangeRocklandBill.EnergyConsumedKWh, mostRecentOrangeRocklandBill.CostCents);
+                energyPurchasedOrSold, mostRecentOrangeRocklandBill.CostCents);
         }
     }
 }

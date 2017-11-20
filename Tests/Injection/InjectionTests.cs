@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using Autofac;
 using Autofac.Core;
+using DadsEnergyReporter.Properties;
 using MailKit.Net.Smtp;
 using NodaTime;
 using Xunit;
@@ -15,18 +16,20 @@ namespace DadsEnergyReporter.Injection
     {
         private readonly ContainerBuilder containerBuilder = new ContainerBuilder();
 
-        public static object[][] Modules = {
+        public static object[][] Modules =
+        {
             new object[] { new MailKitModule(), typeof(SmtpClient) },
             new object[] { new HttpClientModule(), typeof(CookieContainer), typeof(HttpClient), typeof(HttpMessageHandler) },
-            new object[] { new TimeZoneModule(), typeof(DateTimeZone) }
+            new object[] { new TimeZoneModule(), typeof(DateTimeZone) },
+            new object[] { new SettingsModule(), typeof(Settings) }
         };
-        
+
         [Theory, MemberData(nameof(Modules))]
         public void LoadModule(IModule module, params Type[] typesToResolve)
         {
             containerBuilder.RegisterModule(module);
             using (IContainer container = containerBuilder.Build())
-            using (ILifetimeScope scope =container.BeginLifetimeScope())
+            using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
                 foreach (Type typeToResolve in typesToResolve)
                 {

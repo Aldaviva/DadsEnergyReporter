@@ -15,7 +15,9 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
 
     internal class InstallationClientImpl : AbstractResource, InstallationClient
     {
-        public InstallationClientImpl(PowerGuideClientImpl client) : base(client.ApiClient) { }
+        public InstallationClientImpl(PowerGuideClientImpl client) : base(client.ApiClient)
+        {
+        }
 
         public async Task<IEnumerable<Installation>> FetchInstallations()
         {

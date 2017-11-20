@@ -11,8 +11,9 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 {
     public interface OrangeRocklandClient
     {
-        OrangeRocklandAuthenticationClient OrangeRocklandAuthenticationClient { get; }
-        GreenButtonClient GreenButtonClient { get; }
+        OrangeRocklandAuthenticationClient Authentication { get; }
+        GreenButtonClient GreenButton { get; }
+        BillDocumentClient BillDocuments { get; }
     }
     
     [Component]
@@ -20,8 +21,9 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
     {
         internal virtual ApiClient ApiClient { get; }
         
-        public OrangeRocklandAuthenticationClient OrangeRocklandAuthenticationClient { get; }
-        public GreenButtonClient GreenButtonClient { get; }
+        public OrangeRocklandAuthenticationClient Authentication { get; }
+        public GreenButtonClient GreenButton { get; }
+        public BillDocumentClient BillDocuments { get; }
 
         public static UriBuilder ApiRoot => new UriBuilder()
             .UseHttps()
@@ -32,8 +34,9 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         public OrangeRocklandClientImpl(ApiClient apiClient)
         {
             ApiClient = apiClient;
-            OrangeRocklandAuthenticationClient = new OrangeRocklandAuthenticationClientImpl(this);
-            GreenButtonClient = new GreenButtonClientImpl(this);
+            Authentication = new OrangeRocklandAuthenticationClientImpl(this);
+            GreenButton = new GreenButtonClientImpl(this);
+            BillDocuments = new BillDocumentClientImpl(this);
         }
 
         public virtual async Task<IDictionary<string, string>> FetchHiddenFormData(Uri uri)

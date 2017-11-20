@@ -6,15 +6,15 @@ namespace DadsEnergyReporter.Data
     {
         public DateInterval BillingInterval { get; }
         public double PowerGenerated { get; }
-        public int PowerBought { get; }
+        public int PowerBoughtOrSold { get; }
         public int PowerCostCents { get; }
 
         public LocalDate BillingDate => BillingInterval.End;
 
-        public Report(DateInterval billingInterval, double powerGenerated, int powerBought, int powerCostCents)
+        public Report(DateInterval billingInterval, double powerGenerated, int powerBoughtOrSold, int powerCostCents)
         {
             PowerGenerated = powerGenerated;
-            PowerBought = powerBought;
+            PowerBoughtOrSold = powerBoughtOrSold;
             PowerCostCents = powerCostCents;
             BillingInterval = billingInterval;
         }

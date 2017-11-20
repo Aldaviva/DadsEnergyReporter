@@ -21,23 +21,24 @@ namespace DadsEnergyReporter.Service
         private readonly EmailSenderImpl emailSender;
         private readonly IMailTransport smtpClient = A.Fake<IMailTransport>();
         private readonly ReportFormatter reportFormatter = A.Fake<ReportFormatter>();
+        private readonly Settings settings = new Settings()
+        {
+            smtpHost = "aldaviva.com",
+            smtpPort = 25,
+            smtpUsername = "user",
+            smtpPassword = "pass",
+            reportSenderEmail = "reportsender@aldaviva.com",
+            reportRecipientEmails = new List<string> { "ben@aldaviva.com" }
+        };
 
         public EmailSenderTest()
         {
-            emailSender = new EmailSenderImpl(smtpClient, reportFormatter);
+            emailSender = new EmailSenderImpl(smtpClient, reportFormatter, settings);
         }
 
         [Fact]
         public async void SendEmail()
         {
-            Settings settings = Settings.Default;
-            settings.smtpHost = "aldaviva.com";
-            settings.smtpPort = 25;
-            settings.smtpUsername = "user";
-            settings.smtpPassword = "pass";
-            settings.reportSenderEmail = "reportsender@aldaviva.com";
-            settings.reportRecipientEmails = new List<string> { "ben@aldaviva.com" };
-
             var recipients = new List<string> { "ben@aldaviva.com" };
             var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 0, 2000);
 
@@ -63,10 +64,6 @@ namespace DadsEnergyReporter.Service
         {
             A.CallTo(() => smtpClient.ConnectAsync(A<string>._, A<int>._, A<SecureSocketOptions>._, default))
                 .ThrowsAsync(new IOException());
-
-            Settings settings = Settings.Default;
-            settings.smtpHost = "aldaviva.com";
-            settings.smtpPort = 25;
 
             var recipients = new List<string> { "ben@aldaviva.com" };
             var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 0, 2000);
