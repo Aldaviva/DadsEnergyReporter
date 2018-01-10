@@ -15,10 +15,11 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
         private readonly PowerGuideClient powerGuideClient = A.Fake<PowerGuideClient>();
         private readonly InstallationService installationService = A.Fake<InstallationService>();
         private readonly MeasurementClient measurementClient = A.Fake<MeasurementClient>();
+        private readonly DateTimeZone zone;
 
         public MeasurementServiceTest()
         {
-            DateTimeZone zone = DateTimeZoneProviders.Tzdb["America/New_York"];
+            zone = DateTimeZoneProviders.Tzdb["America/New_York"];
             measurementService = new MeasurementServiceImpl(powerGuideClient, installationService, zone);
 
             A.CallTo(() => powerGuideClient.Measurements).Returns(measurementClient);
@@ -38,7 +39,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
                     {
                         CumulativekWh = 0,
                         DataStatus = DataStatus.Validated,
-                        Timestamp = new LocalDateTime(2017, 07, 16, 0, 0)
+                        Timestamp = new LocalDateTime(2017, 07, 17, 0, 0)
                     },
                     new Measurement
                     {
@@ -56,6 +57,10 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
             Data.Measurement measurement = await measurementService.Measure(interval);
 
             measurement.GeneratedKilowattHours.Should().Be(100);
+
+            A.CallTo(() => measurementClient.FetchMeasurements(A<Guid>._,
+                new LocalDateTime(2017, 07, 17, 0, 0).InZoneStrictly(zone),
+                new LocalDateTime(2017, 08, 16, 0, 0).InZoneStrictly(zone))).MustHaveHappened();
         }
     }
 }

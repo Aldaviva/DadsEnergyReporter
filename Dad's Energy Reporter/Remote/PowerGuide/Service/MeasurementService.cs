@@ -32,10 +32,8 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
         {
             Guid installationId = await installationService.FetchInstallationId();
 
-            //start one day earlier because we need the cumulative kWh at the end of the last billing cycle for our subtraction
-            //if we didn't start one day early, we would be omitting the first day's worth of generation, since cumulative kWh is measured at the end of the day
             MeasurementsResponse measurements = await client.Measurements.FetchMeasurements(installationId,
-                billingInterval.Start.Minus(Period.FromDays(1)).AtStartOfDayInZone(reportTimeZone),
+                billingInterval.Start.AtStartOfDayInZone(reportTimeZone),
                 billingInterval.End.AtStartOfDayInZone(reportTimeZone));
 
             double cumulativeGeneratedBeforeInterval = measurements.Measurements.Min(measurement => measurement.CumulativekWh);
