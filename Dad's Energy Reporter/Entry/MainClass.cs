@@ -8,7 +8,7 @@ namespace DadsEnergyReporter.Entry
 {
     public static class MainClass
     {
-        public static void Main()
+        public static int Main()
         {
             JsonSerializerConfigurer.ConfigureDefault();
 
@@ -16,10 +16,11 @@ namespace DadsEnergyReporter.Entry
             using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
                 var energyReporter = scope.Resolve<EnergyReporter>();
-                Task start = energyReporter.Start();
+                Task<int> start = energyReporter.Start();
 
                 // block program from exiting until `start` completes
-                start.GetAwaiter().GetResult();
+                int result = start.GetAwaiter().GetResult();
+                return result;
             }
         }
     }

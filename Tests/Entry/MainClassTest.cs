@@ -12,27 +12,9 @@ namespace DadsEnergyReporter.Entry
         public void StartConsole()
         {
             Settings.Default.reportSenderEmail = "invalid";
-            
-            Action thrower = () => MainClass.Main();
-            thrower.ShouldThrow<SettingsException>();
-        }
 
-        /*[Fact]
-        public void StartAndStop()
-        {
-            Settings.Default.reportSenderEmail = "invalid";
-            var service = new TestableService();
-            service.TestStart(new string[0]);
-            service.Stop();
-            service.Dispose();
+            int actual = MainClass.Main();
+            actual.Should().Be(1);
         }
-
-        private class TestableService : DadsEnergyReporter
-        {
-            public void TestStart(string[] args)
-            {
-                OnStart(args);
-            }
-        }*/
     }
 }

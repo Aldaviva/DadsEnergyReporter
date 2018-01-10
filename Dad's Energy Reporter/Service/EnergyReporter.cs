@@ -13,7 +13,7 @@ namespace DadsEnergyReporter.Service
 {
     public interface EnergyReporter
     {
-        Task Start();
+        Task<int> Start();
     }
 
     [Component]
@@ -39,12 +39,19 @@ namespace DadsEnergyReporter.Service
             this.settings = settings;
         }
 
-        public async Task Start()
+        public async Task<int> Start()
         {
             LOGGER.Info("Dad's Energy Reporter {0}", Assembly.GetExecutingAssembly().GetName().Version);
 
             LOGGER.Debug("Validating settings");
-            ValidateSettings(settings);
+            try
+            {
+                ValidateSettings(settings);
+            }
+            catch (SettingsException)
+            {
+                return 1;
+            }
 
             Instant mostRecentReportBillingDate = Instant.FromUnixTimeMilliseconds(settings.mostRecentReportBillingDate);
 
@@ -53,7 +60,7 @@ namespace DadsEnergyReporter.Service
                 LOGGER.Info(
                     "Report was already created and sent for billing cycle ending on {0}, which is too recent. Not checking again now.",
                     mostRecentReportBillingDate.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).Date);
-                return;
+                return 0;
             }
 
             try
@@ -67,7 +74,7 @@ namespace DadsEnergyReporter.Service
                 {
                     LOGGER.Info("Report has already been sent for billing cycle ending on {0}, not sending again.",
                         report.BillingDate);
-                    return;
+                    return 0;
                 }
 
                 LOGGER.Info("Sending email report");
@@ -75,6 +82,11 @@ namespace DadsEnergyReporter.Service
                 settings.mostRecentReportBillingDate =
                     report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToUnixTimeMilliseconds();
                 settings.Save();
+                return 0;
+            }
+            catch
+            {
+                return 1;
             }
             finally
             {
@@ -118,8 +130,7 @@ namespace DadsEnergyReporter.Service
             }
             catch (SettingsException e)
             {
-                LOGGER.Error($"Invalid setting: {e.SettingsKey} = {e.InvalidValue}");
-                LOGGER.Error(e);
+                LOGGER.Error($"Invalid setting: {e.SettingsKey} = {e.InvalidValue}, {e.Message}.");
                 throw;
             }
         }
