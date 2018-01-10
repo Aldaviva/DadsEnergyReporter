@@ -33,18 +33,17 @@ namespace DadsEnergyReporter.Service
                     new GreenButtonData.MeterReading
                     {
                         CostCents = 0,
-//                        EnergyConsumedKWh = 0,
                         BillingInterval = new DateInterval(new LocalDate(2017, 6, 15), new LocalDate(2017, 7, 17))
                     },
                     new GreenButtonData.MeterReading
                     {
                         CostCents = 100,
-//                        EnergyConsumedKWh = 200,
                         BillingInterval = new DateInterval(new LocalDate(2017, 7, 17), new LocalDate(2017, 8, 16))
                     }
                 }
             };
             A.CallTo(() => orangeRocklandService.GreenButton.FetchGreenButtonData()).Returns(greenButtonData);
+            A.CallTo(() => orangeRocklandService.BillDocuments.FetchEnergyPurchasedOrSoldKWh(A<LocalDate>._)).Returns(200);
 
             var measurement = new Measurement
             {

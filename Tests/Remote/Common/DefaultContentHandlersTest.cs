@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -40,20 +41,31 @@ namespace DadsEnergyReporter.Remote.Common
         [Fact]
         public async void ReadContentAsXmlObject()
         {
-            var responseMessage =
-                new HttpResponseMessage { Content = new StringContent(@"<?xml version=""1.0""?><parent><child attribute=""value"" /></parent>") };
+            var responseMessage = new HttpResponseMessage
+            {
+                Content = new StringContent(@"<?xml version=""1.0""?><parent><child attribute=""value"" /></parent>")
+            };
             Parent actual = await contentHandlers.ReadContentAsXml<Parent>(responseMessage);
             actual.Child.Attribute.Should().Be("value");
         }
-        
+
         [Fact]
         public async void ReadContentAsHtml()
         {
-            var responseMessage = new HttpResponseMessage { Content = new StringContent("<html><head></head><body><p>Hello</p></body></html>") };
+            var responseMessage = new HttpResponseMessage
+            {
+                Content = new StringContent("<html><head></head><body><p>Hello</p></body></html>"),
+                RequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://aldaviva.com/hargle"),
+                StatusCode = HttpStatusCode.OK,
+                Headers =
+                {
+                    { "X-Hargle", "blargle" }
+                }
+            };
             IHtmlDocument actual = await contentHandlers.ReadContentAsHtml(responseMessage);
             actual.QuerySelector("p").TextContent.Should().Be("Hello");
         }
-        
+
         [XmlRoot(ElementName = "parent")]
         public class Parent
         {

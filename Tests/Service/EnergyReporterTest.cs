@@ -25,7 +25,10 @@ namespace DadsEnergyReporter.Service
             solarCityPassword = "solarcityPass",
             mostRecentReportBillingDate = 0,
             reportRecipientEmails = new List<string> { "ben@aldaviva.com" },
-            reportSenderEmail = "dadsenergyreporter@aldaviva.com"
+            reportSenderEmail = "dadsenergyreporter@aldaviva.com",
+            smtpUsername = "hargle",
+            smtpPassword = "blargle",
+            smtpHost = "aldaviva.com"
         };
 
         private static readonly DateTimeZone ZONE = DateTimeZoneProviders.Tzdb["America/New_York"];
