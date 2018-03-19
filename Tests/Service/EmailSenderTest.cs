@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
 using DadsEnergyReporter.Exceptions;
-using DadsEnergyReporter.Properties;
 using FakeItEasy;
 using FluentAssertions;
 using MailKit;
@@ -23,12 +22,12 @@ namespace DadsEnergyReporter.Service
         private readonly ReportFormatter reportFormatter = A.Fake<ReportFormatter>();
         private readonly Settings settings = new Settings()
         {
-            smtpHost = "aldaviva.com",
-            smtpPort = 25,
-            smtpUsername = "user",
-            smtpPassword = "pass",
-            reportSenderEmail = "reportsender@aldaviva.com",
-            reportRecipientEmails = new List<string> { "ben@aldaviva.com" }
+            SmtpHost = "aldaviva.com",
+            SmtpPort = 25,
+            SmtpUsername = "user",
+            SmtpPassword = "pass",
+            ReportSenderEmail = "reportsender@aldaviva.com",
+            ReportRecipientEmails = new List<string> { "ben@aldaviva.com" }
         };
 
         public EmailSenderTest()

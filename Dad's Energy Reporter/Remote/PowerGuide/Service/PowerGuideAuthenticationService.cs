@@ -46,6 +46,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Service
             IDictionary<string, string> credentialResponseParams = await client.Authentication.SubmitCredentials(Username, Password, preLogInData);
             PowerGuideAuthToken authToken = await client.Authentication.FetchAuthToken(credentialResponseParams);
             LOGGER.Debug("Logged in to MySolarCity");
+            LOGGER.Trace($"MySolarCity auth token: {authToken}");
             return authToken;
         }
 

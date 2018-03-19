@@ -20,11 +20,10 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         private readonly ApiClient apiClient = A.Fake<ApiClient>();
         private readonly FakeHttpMessageHandler httpMessageHander = A.Fake<FakeHttpMessageHandler>();
         private readonly ContentHandlers contentHandlers = A.Fake<ContentHandlers>();
-        private readonly OrangeRocklandClientImpl client;
 
         public OrangeRocklandAuthenticationClientTest()
         {
-            client = A.Fake<OrangeRocklandClientImpl>();
+            var client = A.Fake<OrangeRocklandClientImpl>();
             A.CallTo(() => client.ApiClient).Returns(apiClient);
 
             authClient = new OrangeRocklandAuthenticationClientImpl(client);
@@ -60,23 +59,34 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         [Fact]
         public async void SubmitCredentials()
         {
-            var response = A.Fake<HttpResponseMessage>();
-            string requestBody = null;
-            A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>._)).ReturnsLazily(async call =>
+            var tokenExchangeUriResponse = A.Fake<HttpResponseMessage>();
+            var authTokenResponse = A.Fake<HttpResponseMessage>();
+            var sessionActivationResponse = A.Fake<HttpResponseMessage>();
+
+            string credentialsRequestBody = null;
+            var tokenExchangeUriResponeBody = new Dictionary<string, object>
             {
-                requestBody = await call.Arguments[0].As<HttpRequestMessage>().Content.ReadAsStringAsync();
-                return response;
-            });
+                { "login", true },
+                { "newDevice", false },
+                { "authRedirectUrl", "https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=***REMOVED***" },
+                { "noMfa", false },
+                { "legacyLockout", false }
+            };
+
+            A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>._)).ReturnsLazily(async call =>
+                {
+                    credentialsRequestBody = await call.Arguments[0].As<HttpRequestMessage>().Content.ReadAsStringAsync();
+                    return tokenExchangeUriResponse;
+                }).Once().Then
+                .Returns(authTokenResponse).Once().Then
+                .Returns(sessionActivationResponse).Once();
+
+            A.CallTo(() => contentHandlers.ReadContentAsJson<IDictionary<string, object>>(tokenExchangeUriResponse))
+                .Returns(tokenExchangeUriResponeBody);
 
             var cookieContainer = new CookieContainer();
             cookieContainer.Add(new Uri("https://apps.coned.com/"), new Cookie("LogCOOKPl95FnjAT", "hargle"));
             A.CallTo(() => apiClient.Cookies).Returns(cookieContainer);
-
-            A.CallTo(() => client.FetchHiddenFormData(A<Uri>._)).Returns(new Dictionary<string, string>
-            {
-                ["hiddenKey1"] = "hiddenValue1",
-                ["hiddenKey2"] = "hiddenValue2"
-            });
 
             OrangeRocklandAuthToken actual = await authClient.SubmitCredentials("user", "pass");
 
@@ -84,20 +94,38 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 
             A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>.That.Matches(message =>
                 message.Method == HttpMethod.Post
-                && message.RequestUri.ToString().Equals("https://apps.coned.com/ORMyAccount/Forms/login.aspx")
+                && message.RequestUri.ToString().Equals("https://www.oru.com/sitecore/api/ssc/ConEd-Cms-Services-Controllers-Okta/User/0/Login")
+            ))).MustHaveHappened();
+            A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>.That.Matches(message =>
+                message.Method == HttpMethod.Get
+                && message.RequestUri.ToString().Equals("https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=***REMOVED***")
+            ))).MustHaveHappened();
+            A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>.That.Matches(message =>
+                message.Method == HttpMethod.Get
+                && message.RequestUri.ToString().Equals("https://apps.coned.com/ORMyAccount/Forms/System/accountStatus.aspx")
             ))).MustHaveHappened();
 
-            requestBody.Should().Be("txtUsername=user" +
-                                    "&txtPassword=pass" +
-                                    "&imgGo.x=1" +
-                                    "&imgGo.y=1" +
-                                    "&hiddenKey1=hiddenValue1" +
-                                    "&hiddenKey2=hiddenValue2");
+            credentialsRequestBody.Should().Be("{" +
+                                               "\"LoginEmail\":\"user\"," +
+                                               "\"LoginPassword\":\"pass\"," +
+                                               "\"LoginRememberMe\":false," +
+                                               "\"ReturnUrl\":\"\"" +
+                                               "}");
         }
 
         [Fact]
         public void SubmitCredentialsFailsNoCookie()
         {
+            A.CallTo(() => contentHandlers.ReadContentAsJson<IDictionary<string, object>>(A<HttpResponseMessage>._))
+                .Returns(new Dictionary<string, object>
+            {
+                { "login", true },
+                { "newDevice", false },
+                { "authRedirectUrl", "https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=***REMOVED***" },
+                { "noMfa", false },
+                { "legacyLockout", false }
+            });
+
             var response = A.Fake<HttpResponseMessage>();
             A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>._)).Returns(response);
             A.CallTo(() => apiClient.Cookies).Returns(new CookieContainer());
@@ -105,7 +133,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
             Func<Task> thrower = async () => await authClient.SubmitCredentials("user", "pass");
 
             thrower.ShouldThrow<OrangeRocklandException>().WithMessage(
-                "Auth Phase 2/2: No LogCOOKPl95FnjAT cookie was set after submitting credentials, username or password may be incorrect.");
+                "Auth Phase 2/3: No LogCOOKPl95FnjAT cookie was set after submitting credentials, username or password may be incorrect.");
         }
 
         [Fact]
@@ -117,7 +145,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
             Func<Task> thrower = async () => await authClient.SubmitCredentials("user", "pass");
 
             thrower.ShouldThrow<OrangeRocklandException>().WithMessage(
-                "Auth Phase 2/2: Failed to log in with credentials, Orange and Rockland site may be unavailable.");
+                "Auth Phase 1/3: Failed to log in with credentials, Orange and Rockland site may be unavailable.");
         }
     }
 }

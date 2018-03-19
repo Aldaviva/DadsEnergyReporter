@@ -1,9 +1,9 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
-using DadsEnergyReporter.Properties;
 using DadsEnergyReporter.Remote.OrangeRockland.Service;
 using DadsEnergyReporter.Remote.PowerGuide.Service;
 using NLog;
@@ -53,7 +53,7 @@ namespace DadsEnergyReporter.Service
                 return 1;
             }
 
-            Instant mostRecentReportBillingDate = Instant.FromUnixTimeMilliseconds(settings.mostRecentReportBillingDate);
+            Instant mostRecentReportBillingDate = Instant.FromDateTimeUtc(settings.MostRecentReportBillingDate);
 
             if (HaveSentReportTooRecently(mostRecentReportBillingDate))
             {
@@ -65,8 +65,9 @@ namespace DadsEnergyReporter.Service
 
             try
             {
-                LOGGER.Info("Logging in");
+                LOGGER.Info("Logging in...");
                 await LogIn();
+                LOGGER.Info("Logged in.");
 
                 Report report = await reportGenerator.GenerateReport();
 
@@ -78,14 +79,15 @@ namespace DadsEnergyReporter.Service
                 }
 
                 LOGGER.Info("Sending email report");
-                await emailSender.SendEmail(report, settings.reportRecipientEmails);
-                settings.mostRecentReportBillingDate =
-                    report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToUnixTimeMilliseconds();
+                await emailSender.SendEmail(report, settings.ReportRecipientEmails);
+                settings.MostRecentReportBillingDate =
+                    report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToDateTimeUtc();
                 settings.Save();
                 return 0;
             }
-            catch
+            catch (Exception e)
             {
+                LOGGER.Error(e, "Aborted report generation due to exception");
                 return 1;
             }
             finally
@@ -100,10 +102,10 @@ namespace DadsEnergyReporter.Service
 
         internal Task LogIn()
         {
-            orangeRocklandService.Authentication.Username = settings.orangeRocklandUsername;
-            orangeRocklandService.Authentication.Password = settings.orangeRocklandPassword;
-            powerGuideService.Authentication.Username = settings.solarCityUsername;
-            powerGuideService.Authentication.Password = settings.solarCityPassword;
+            orangeRocklandService.Authentication.Username = settings.OrangeRocklandUsername;
+            orangeRocklandService.Authentication.Password = settings.OrangeRocklandPassword;
+            powerGuideService.Authentication.Username = settings.SolarCityUsername;
+            powerGuideService.Authentication.Password = settings.SolarCityPassword;
 
             return Task.WhenAll(
                 orangeRocklandService.Authentication.GetAuthToken(),

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
-using DadsEnergyReporter.Properties;
 using MailKit;
 using MailKit.Security;
 using MimeKit;
@@ -34,13 +33,13 @@ namespace DadsEnergyReporter.Service
         public async Task SendEmail(Report report, IEnumerable<string> recipients)
         {
             MimeMessage message = reportFormatter.FormatReport(report);
-            message.From.Add(new MailboxAddress("Dad's Energy Reporter", settings.reportSenderEmail));
+            message.From.Add(new MailboxAddress("Dad's Energy Reporter", settings.ReportSenderEmail));
             message.To.AddRange(recipients.Select(recipient => new MailboxAddress(recipient)));
 
             try
             {
-                await smtpClient.ConnectAsync(settings.smtpHost, settings.smtpPort, SecureSocketOptions.StartTls);
-                await smtpClient.AuthenticateAsync(settings.smtpUsername, settings.smtpPassword);
+                await smtpClient.ConnectAsync(settings.SmtpHost, settings.SmtpPort, SecureSocketOptions.StartTls);
+                await smtpClient.AuthenticateAsync(settings.SmtpUsername, settings.SmtpPassword);
                 await smtpClient.SendAsync(message);
                 await smtpClient.DisconnectAsync(true);
             }

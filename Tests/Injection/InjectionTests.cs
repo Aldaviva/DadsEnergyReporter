@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Autofac;
 using Autofac.Core;
-using DadsEnergyReporter.Properties;
+using DadsEnergyReporter.Data;
 using MailKit.Net.Smtp;
 using NodaTime;
 using Xunit;
@@ -16,6 +17,11 @@ namespace DadsEnergyReporter.Injection
     {
         private readonly ContainerBuilder containerBuilder = new ContainerBuilder();
 
+        public InjectionTests()
+        {
+            Settings.SettingsManager.Filename = @"%localappdata%/Dad's Energy Reporter/test-settings.json";
+        }
+
         public static object[][] Modules =
         {
             new object[] { new MailKitModule(), typeof(SmtpClient) },
@@ -27,6 +33,14 @@ namespace DadsEnergyReporter.Injection
         [Theory, MemberData(nameof(Modules))]
         public void LoadModule(IModule module, params Type[] typesToResolve)
         {
+            if (!typesToResolve.Contains(typeof(Settings)))
+            {
+                containerBuilder.RegisterInstance(new Settings
+                {
+                    SmtpHost = "mail.example.com"
+                });
+            }
+
             containerBuilder.RegisterModule(module);
             using (IContainer container = containerBuilder.Build())
             using (ILifetimeScope scope = container.BeginLifetimeScope())

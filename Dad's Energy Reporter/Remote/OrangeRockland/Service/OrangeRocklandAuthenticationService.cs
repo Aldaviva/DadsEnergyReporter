@@ -43,6 +43,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
             LOGGER.Debug("Logging in to Orange & Rockland as {0}", Username);
             OrangeRocklandAuthToken authToken = await client.Authentication.SubmitCredentials(Username, Password);
             LOGGER.Debug("Logged into Orange & Rockland");
+            LOGGER.Trace($"ORU auth token: {authToken}");
             return authToken;
         }
 

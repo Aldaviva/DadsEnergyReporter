@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using DadsEnergyReporter.Properties;
+using DadsEnergyReporter.Data;
 
 namespace DadsEnergyReporter.Injection
 {
@@ -7,7 +7,7 @@ namespace DadsEnergyReporter.Injection
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(Settings.Default).AsSelf().SingleInstance();
+            builder.RegisterInstance(Settings.Get()).AsSelf().SingleInstance();
         }
     }
 }

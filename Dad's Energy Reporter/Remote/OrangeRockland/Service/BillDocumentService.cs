@@ -29,6 +29,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         Task<int> FetchEnergyPurchasedOrSoldKWh(LocalDate billingIntervalEndDate);
     }
 
+    //TODO create unit tests for this class
     [Component]
     internal class BillDocumentServiceImpl : BillDocumentService
     {

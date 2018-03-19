@@ -130,6 +130,7 @@
     <Compile Include="FakeHttpMessageHandler.cs" />
     <Compile Include="Injection\InjectionTests.cs" />
     <Compile Include="Remote\Common\DefaultContentHandlersTest.cs" />
+    <Compile Include="Remote\Common\JsonEncodedContentTest.cs" />
     <Compile Include="Remote\OrangeRockland\Client\OrangeRocklandAuthenticationClientTest.cs" />
     <Compile Include="Remote\OrangeRockland\Client\GreenButtonClientTest.cs" />
     <Compile Include="Remote\OrangeRockland\Client\OrangeRocklandClientTest.cs" />
@@ -148,7 +149,8 @@
     <Compile Include="Service\ReportFormatterTest.cs" />
     <Compile Include="Service\ReportGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestSettings.cs" />
+    <Compile Include="Data\JsonSettingsTest.cs" />
+    <Compile Include="Data\TestSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

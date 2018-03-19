@@ -64,6 +64,11 @@ namespace DadsEnergyReporter.Data.Marshal
         {
             return FedAuth != null ? FedAuth.GetHashCode() : 0;
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(FedAuth)}: {FedAuth}";
+        }
     }
 
     public enum DataStatus

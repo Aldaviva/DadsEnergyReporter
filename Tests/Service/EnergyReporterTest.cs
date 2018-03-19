@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DadsEnergyReporter.Data;
-using DadsEnergyReporter.Properties;
 using DadsEnergyReporter.Remote.OrangeRockland.Service;
 using DadsEnergyReporter.Remote.PowerGuide.Service;
 using FakeItEasy;
@@ -19,16 +19,16 @@ namespace DadsEnergyReporter.Service
         private readonly OrangeRocklandAuthenticationService orangeRocklandAuthenticationService = A.Fake<OrangeRocklandAuthenticationService>();
         private readonly Settings settings = new Settings
         {
-            orangeRocklandUsername = "oruUser",
-            orangeRocklandPassword = "oruPass",
-            solarCityUsername = "solarcityUser",
-            solarCityPassword = "solarcityPass",
-            mostRecentReportBillingDate = 0,
-            reportRecipientEmails = new List<string> { "ben@aldaviva.com" },
-            reportSenderEmail = "dadsenergyreporter@aldaviva.com",
-            smtpUsername = "hargle",
-            smtpPassword = "blargle",
-            smtpHost = "aldaviva.com"
+            OrangeRocklandUsername = "oruUser",
+            OrangeRocklandPassword = "oruPass",
+            SolarCityUsername = "solarcityUser",
+            SolarCityPassword = "solarcityPass",
+            MostRecentReportBillingDate = DateTime.MinValue.ToUniversalTime(),
+            ReportRecipientEmails = new List<string> { "ben@aldaviva.com" },
+            ReportSenderEmail = "dadsenergyreporter@aldaviva.com",
+            SmtpUsername = "hargle",
+            SmtpPassword = "blargle",
+            SmtpHost = "aldaviva.com"
         };
 
         private static readonly DateTimeZone ZONE = DateTimeZoneProviders.Tzdb["America/New_York"];
@@ -56,13 +56,13 @@ namespace DadsEnergyReporter.Service
             A.CallTo(() => powerGuideAuthenticationService.LogOut()).MustHaveHappened();
             A.CallTo(() => orangeRocklandAuthenticationService.LogOut()).MustHaveHappened();
 
-            settings.mostRecentReportBillingDate.Should().Be(report.BillingDate.AtStartOfDayInZone(ZONE).ToInstant().ToUnixTimeMilliseconds());
+            settings.MostRecentReportBillingDate.Should().Be(report.BillingDate.AtStartOfDayInZone(ZONE).ToInstant().ToDateTimeUtc());
         }
 
         [Fact]
         public async void SkipsIfTooFewDaysSinceLastReport()
         {
-            settings.mostRecentReportBillingDate = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(27)).ToUnixTimeMilliseconds();
+            settings.MostRecentReportBillingDate = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(27)).ToDateTimeUtc();
 
             await energyReporter.Start();
 
@@ -75,7 +75,7 @@ namespace DadsEnergyReporter.Service
         [Fact]
         public async void SkipsIfAlreadySentReport()
         {
-            settings.mostRecentReportBillingDate = new LocalDate(2017, 08, 16).AtStartOfDayInZone(ZONE).ToInstant().ToUnixTimeMilliseconds();
+            settings.MostRecentReportBillingDate = new LocalDate(2017, 08, 16).AtStartOfDayInZone(ZONE).ToInstant().ToDateTimeUtc();
 
             var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 20, 3000);
             A.CallTo(() => reportGenerator.GenerateReport()).Returns(report);
