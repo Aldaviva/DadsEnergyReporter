@@ -105,10 +105,10 @@ namespace DadsEnergyReporter.Data
         {
             Settings settings = CreateValidSettings();
             Action thrower = () => settings.Validate();
-            thrower.ShouldNotThrow<SettingsException>();
+            thrower.Should().NotThrow<SettingsException>();
 
             settings.ReportSenderEmail = "foo";
-            thrower.ShouldThrow<SettingsException>();
+            thrower.Should().Throw<SettingsException>();
         }
 
         [Fact]
@@ -129,11 +129,11 @@ namespace DadsEnergyReporter.Data
             Action validateMethod = settings.Validate;
             if (isValid)
             {
-                validateMethod.ShouldNotThrow<SettingsException>($"{settingsKey} = {settingsValue} is valid");
+                validateMethod.Should().NotThrow<SettingsException>($"{settingsKey} = {settingsValue} is valid");
             }
             else
             {
-                validateMethod.ShouldThrow<SettingsException>($"{settingsKey} = {settingsValue} is invalid");
+                validateMethod.Should().Throw<SettingsException>($"{settingsKey} = {settingsValue} is invalid");
             }
         }
 

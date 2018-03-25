@@ -74,8 +74,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
                 .ThrowsAsync(new HttpRequestException());
 
             Func<Task> thrower = async () => await greenButtonClient.FetchGreenButtonData();
-
-            thrower.ShouldThrow<OrangeRocklandException>()
+            thrower.Should().Throw<OrangeRocklandException>()
                 .WithMessage("Failed to download Green Button data: XML request failed");
         }
     }

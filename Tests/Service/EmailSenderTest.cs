@@ -69,7 +69,7 @@ namespace DadsEnergyReporter.Service
 
             Func<Task> thrower = async () => await emailSender.SendEmail(report, recipients);
 
-            thrower.ShouldThrow<EmailException>().WithMessage("Failed to send email message");
+            thrower.Should().Throw<EmailException>().WithMessage("Failed to send email message");
         }
     }
 }

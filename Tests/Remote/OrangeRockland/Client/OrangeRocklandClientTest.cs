@@ -81,7 +81,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
             var uri = new Uri("https://apps.coned.com/ORMyAccount/Forms/login.aspx");
             Func<Task> thrower = async () => await client.FetchHiddenFormData(uri);
 
-            thrower.ShouldThrow<HttpRequestException>();
+            thrower.Should().Throw<HttpRequestException>();
         }
     }
 }

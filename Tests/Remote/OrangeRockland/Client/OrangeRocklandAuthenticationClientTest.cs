@@ -53,7 +53,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 
             Func<Task> thrower = async () => await authClient.LogOut();
 
-            thrower.ShouldThrow<OrangeRocklandException>().WithMessage("Failed to log out");
+            thrower.Should().Throw<OrangeRocklandException>().WithMessage("Failed to log out");
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 
             Func<Task> thrower = async () => await authClient.SubmitCredentials("user", "pass");
 
-            thrower.ShouldThrow<OrangeRocklandException>().WithMessage(
+            thrower.Should().Throw<OrangeRocklandException>().WithMessage(
                 "Auth Phase 2/3: No LogCOOKPl95FnjAT cookie was set after submitting credentials, username or password may be incorrect.");
         }
 
@@ -144,7 +144,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
 
             Func<Task> thrower = async () => await authClient.SubmitCredentials("user", "pass");
 
-            thrower.ShouldThrow<OrangeRocklandException>().WithMessage(
+            thrower.Should().Throw<OrangeRocklandException>().WithMessage(
                 "Auth Phase 1/3: Failed to log in with credentials, Orange and Rockland site may be unavailable.");
         }
     }

@@ -55,7 +55,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
 
             Func<Task> thrower = async () => await client.LogOut();
 
-            thrower.ShouldThrow<PowerGuideException>().WithMessage("Failed to log out");
+            thrower.Should().Throw<PowerGuideException>().WithMessage("Failed to log out");
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
 
             Func<Task> thrower = async () => await client.FetchPreLogInData();
 
-            thrower.ShouldThrow<PowerGuideException>().WithMessage("Auth Phase 1/3: Failed to fetch pre-log-in data");
+            thrower.Should().Throw<PowerGuideException>().WithMessage("Auth Phase 1/3: Failed to fetch pre-log-in data");
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
                 await client.SubmitCredentials("user@domain.com", "pass", preLogInData);
             };
 
-            thrower.ShouldThrow<PowerGuideException>()
+            thrower.Should().Throw<PowerGuideException>()
                 .WithMessage(
                     "Auth Phase 2/3: Failed to log in with credentials, username or password may be incorrect.");
         }
@@ -199,7 +199,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
 
             Func<Task> thrower = async () => await client.FetchAuthToken(new Dictionary<string, string>());
 
-            thrower.ShouldThrow<PowerGuideException>().WithMessage(
+            thrower.Should().Throw<PowerGuideException>().WithMessage(
                 "Auth Phase 3/3: No FedAuth cookie was set while fetching auth token from https://mysolarcity.com/");
         }
 
@@ -211,7 +211,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
 
             Func<Task> thrower = async () => await client.FetchAuthToken(new Dictionary<string, string>());
 
-            thrower.ShouldThrow<PowerGuideException>()
+            thrower.Should().Throw<PowerGuideException>()
                 .WithMessage("Auth Phase 3/3: Failed to fetch auth token based on credential response");
         }
     }

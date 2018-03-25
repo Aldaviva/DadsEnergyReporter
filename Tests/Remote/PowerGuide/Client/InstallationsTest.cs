@@ -55,7 +55,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
 
             Func<Task> thrower = async () => await client.FetchInstallations();
 
-            thrower.ShouldThrow<PowerGuideException>()
+            thrower.Should().Throw<PowerGuideException>()
                 .WithMessage("Failed to fetch installation ID of the solar panels at the house");
         }
     }

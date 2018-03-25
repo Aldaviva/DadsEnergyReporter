@@ -71,7 +71,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
             Func<Task> thrower = async () =>
                 await client.FetchMeasurements(new Guid(), new ZonedDateTime(), new ZonedDateTime());
 
-            thrower.ShouldThrow<PowerGuideException>()
+            thrower.Should().Throw<PowerGuideException>()
                 .WithMessage("Failed to get solar output measurements");
         }
     }
