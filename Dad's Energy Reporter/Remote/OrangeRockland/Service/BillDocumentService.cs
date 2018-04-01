@@ -34,10 +34,9 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
     internal class BillDocumentServiceImpl : BillDocumentService
     {
         private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
-        private static readonly ITextExtractionStrategy TEXT_EXTRACTION_STRATEGY = new SimpleTextExtractionStrategy();
         private static readonly Regex USAGE_PATTERN = new Regex(@"Total Usage KWH \d+ Days (-?\d+)", RegexOptions.IgnoreCase);
         private static readonly LocalDatePattern BILL_DATE_PATTERN = LocalDatePattern.CreateWithCurrentCulture("MM-dd-uuuu");
-        
+
         private readonly OrangeRocklandClient client;
 
         public BillDocumentServiceImpl(OrangeRocklandClient client)
@@ -75,14 +74,16 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Service
         internal static BillDocument FindBillDocumentForBillingInterval(IEnumerable<BillDocument> billDocuments,
             LocalDate billingIntervalEndDate)
         {
-            return billDocuments.Where(published => billingIntervalEndDate <= published.PublishingDate).Min();
+            return billDocuments.Where(bill => billingIntervalEndDate <= bill.PublishingDate)
+                .OrderBy(bill => bill.PublishingDate)
+                .First();
         }
 
         internal static int ExtractEnergyPurchasedOrSold(BillDocument billDocument, Stream documentContents)
         {
             using (var pdfReader = new PdfReader(documentContents))
             {
-                string pageText = PdfTextExtractor.GetTextFromPage(pdfReader, 1, TEXT_EXTRACTION_STRATEGY);
+                string pageText = PdfTextExtractor.GetTextFromPage(pdfReader, 1, new SimpleTextExtractionStrategy());
                 Match match = USAGE_PATTERN.Match(pageText);
                 if (!match.Success)
                 {

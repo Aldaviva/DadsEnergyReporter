@@ -23,7 +23,6 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
         public LocalDate PublishingDate;
     }
     
-    //TODO create unit tests for this class
     internal class BillDocumentClientImpl : AbstractResource, BillDocumentClient
     {
         public BillDocumentClientImpl(OrangeRocklandClientImpl client) : base(client.ApiClient)

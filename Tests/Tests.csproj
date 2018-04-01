@@ -128,9 +128,11 @@
     <Compile Include="Injection\InjectionTests.cs" />
     <Compile Include="Remote\Common\DefaultContentHandlersTest.cs" />
     <Compile Include="Remote\Common\JsonEncodedContentTest.cs" />
+    <Compile Include="Remote\OrangeRockland\Client\BillDocumentClientTest.cs" />
     <Compile Include="Remote\OrangeRockland\Client\OrangeRocklandAuthenticationClientTest.cs" />
     <Compile Include="Remote\OrangeRockland\Client\GreenButtonClientTest.cs" />
     <Compile Include="Remote\OrangeRockland\Client\OrangeRocklandClientTest.cs" />
+    <Compile Include="Remote\OrangeRockland\Service\BillDocumentServiceTest.cs" />
     <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandAuthenticationServiceTest.cs" />
     <Compile Include="Remote\OrangeRockland\Service\GreenButtonServiceTest.cs" />
     <Compile Include="Remote\OrangeRockland\Service\OrangeRocklandServiceTest.cs" />
@@ -151,6 +153,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Data\billEnergyPurchased.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\billEnergySold.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Data\installations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -175,6 +183,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\solarcity-submit-credentials.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\billDocumentIndex.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
