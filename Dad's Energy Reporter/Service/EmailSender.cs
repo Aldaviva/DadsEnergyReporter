@@ -13,7 +13,7 @@ namespace DadsEnergyReporter.Service
 {
     public interface EmailSender
     {
-        Task SendEmail(Report report, IEnumerable<string> recipients);
+        Task SendEmail(SolarAndUtilityReport report, IEnumerable<string> recipients);
     }
 
     [Component]
@@ -30,7 +30,7 @@ namespace DadsEnergyReporter.Service
             this.settings = settings;
         }
 
-        public async Task SendEmail(Report report, IEnumerable<string> recipients)
+        public async Task SendEmail(SolarAndUtilityReport report, IEnumerable<string> recipients)
         {
             MimeMessage message = reportFormatter.FormatReport(report);
             message.From.Add(new MailboxAddress("Dad's Energy Reporter", settings.ReportSenderEmail));

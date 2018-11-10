@@ -16,6 +16,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
     public interface PowerGuideAuthenticationClient
     {
         Task LogOut();
+        
         Task<PreLogInData> FetchPreLogInData();
 
         Task<IDictionary<string, string>>
@@ -26,6 +27,7 @@ namespace DadsEnergyReporter.Remote.PowerGuide.Client
 
     /**
      * OAuth API is only available for partners of SolarCity, so we're using web authentication instead
+     * TODO getting some TLS error, we might need to change the URLs around a little. the overall flow looks the same.
      */
     internal class PowerGuideAuthenticationClientImpl : AbstractResource, PowerGuideAuthenticationClient
     {

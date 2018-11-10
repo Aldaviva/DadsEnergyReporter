@@ -10,7 +10,7 @@ namespace DadsEnergyReporter.Service
 {
     public interface ReportFormatter
     {
-        MimeMessage FormatReport(Report report);
+        MimeMessage FormatReport(SolarAndUtilityReport report);
     }
 
     [Component]
@@ -18,7 +18,7 @@ namespace DadsEnergyReporter.Service
     {
         private static readonly LocalDatePattern SHORT_DATE_PATTERN = LocalDatePattern.CreateWithCurrentCulture("M/d");
 
-        public MimeMessage FormatReport(Report report)
+        public MimeMessage FormatReport(SolarAndUtilityReport report)
         {
             var viewModel = new ReportViewModel(report);
             return new MimeMessage
@@ -34,9 +34,9 @@ namespace DadsEnergyReporter.Service
 
         private struct ReportViewModel
         {
-            private readonly Report report;
+            private readonly SolarAndUtilityReport report;
 
-            public ReportViewModel(Report report)
+            public ReportViewModel(SolarAndUtilityReport report)
             {
                 this.report = report;
             }
@@ -56,7 +56,7 @@ namespace DadsEnergyReporter.Service
             public string TotalValue => $"{report.PowerGenerated + report.PowerBoughtOrSold:N0} kWh";
         }
 
-        private static string FormatSubject(Report report)
+        private static string FormatSubject(SolarAndUtilityReport report)
         {
             return $"Electricity Usage Report for {ShortDate(report.BillingInterval.Start)}–" +
                 ShortDate(report.BillingInterval.End);

@@ -3,6 +3,7 @@ using Autofac;
 using DadsEnergyReporter.Data.Marshal;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Service;
+using NLog;
 
 namespace DadsEnergyReporter.Entry
 {
@@ -16,11 +17,27 @@ namespace DadsEnergyReporter.Entry
             using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
                 var energyReporter = scope.Resolve<EnergyReporter>();
-                Task<int> start = energyReporter.Start();
+                var options = scope.Resolve<Options>();
+
+                ConfigureLogging(options.SkipUtility);
+
+                Task<int> start = options.SkipUtility
+                    ? energyReporter.SendSolarReport()
+                    : energyReporter.SendSolarAndUtilityReport();
 
                 // block program from exiting until `start` completes
                 int result = start.GetAwaiter().GetResult();
                 return result;
+            }
+        }
+
+        private static void ConfigureLogging(bool skipUtility)
+        {
+            // SkipUtility relies on console output to return its data to the PHP calling script, so don't
+            // include log messages as well
+            if (skipUtility)
+            {
+                LogManager.GlobalThreshold = LogLevel.Error;
             }
         }
     }

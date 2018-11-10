@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
+using DadsEnergyReporter.Entry;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Remote.OrangeRockland.Service;
@@ -13,7 +15,8 @@ namespace DadsEnergyReporter.Service
 {
     public interface EnergyReporter
     {
-        Task<int> Start();
+        Task<int> SendSolarReport();
+        Task<int> SendSolarAndUtilityReport();
     }
 
     [Component]
@@ -27,9 +30,10 @@ namespace DadsEnergyReporter.Service
         private readonly OrangeRocklandService orangeRocklandService;
         private readonly DateTimeZone reportTimeZone;
         private readonly Settings settings;
+        private readonly Options options;
 
         public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender, PowerGuideService powerGuideService,
-            OrangeRocklandService orangeRocklandService, DateTimeZone reportTimeZone, Settings settings)
+            OrangeRocklandService orangeRocklandService, DateTimeZone reportTimeZone, Settings settings, Options options)
         {
             this.reportGenerator = reportGenerator;
             this.emailSender = emailSender;
@@ -37,9 +41,61 @@ namespace DadsEnergyReporter.Service
             this.orangeRocklandService = orangeRocklandService;
             this.reportTimeZone = reportTimeZone;
             this.settings = settings;
+            this.options = options;
         }
 
-        public async Task<int> Start()
+        public async Task<int> SendSolarReport()
+        {
+            LOGGER.Info("Dad's Energy Reporter {0}", Assembly.GetExecutingAssembly().GetName().Version);
+
+            LOGGER.Debug("Validating options");
+            try
+            {
+                ValidateOptions(options);
+            }
+            catch (Exception)
+            {
+                return 1;
+            }
+
+            LOGGER.Debug("Validating settings");
+            try
+            {
+                ValidateSettings(settings);
+            }
+            catch (SettingsException)
+            {
+                return 1;
+            }
+
+            try
+            {
+                LOGGER.Info("Logging in...");
+                await LogIn();
+                LOGGER.Info("Logged in.");
+
+                SolarReport report =
+                    await reportGenerator.GenerateSolarReport(new DateInterval(options.StartDate, options.EndDate));
+
+                Console.WriteLine($"{report.PowerGenerated:N2}");
+
+                return 0;
+            }
+            catch (Exception e)
+            {
+                LOGGER.Error(e, "Aborted report generation due to exception "+e);
+                return 1;
+            }
+            finally
+            {
+                LOGGER.Info("Logging out");
+                await powerGuideService.Authentication.LogOut();
+                LOGGER.Info("Done");
+            }
+        }
+
+
+        public async Task<int> SendSolarAndUtilityReport()
         {
             LOGGER.Info("Dad's Energy Reporter {0}", Assembly.GetExecutingAssembly().GetName().Version);
 
@@ -69,7 +125,7 @@ namespace DadsEnergyReporter.Service
                 await LogIn();
                 LOGGER.Info("Logged in.");
 
-                Report report = await reportGenerator.GenerateReport();
+                SolarAndUtilityReport report = await reportGenerator.GenerateReport();
 
                 if (HaveAlreadySentReport(mostRecentReportBillingDate, report))
                 {
@@ -95,7 +151,7 @@ namespace DadsEnergyReporter.Service
                 LOGGER.Info("Logging out");
                 Task.WaitAll(
                     powerGuideService.Authentication.LogOut(),
-                    orangeRocklandService.Authentication.LogOut());
+                    options.SkipUtility ? Task.CompletedTask : orangeRocklandService.Authentication.LogOut());
                 LOGGER.Info("Done");
             }
         }
@@ -108,7 +164,7 @@ namespace DadsEnergyReporter.Service
             powerGuideService.Authentication.Password = settings.SolarCityPassword;
 
             return Task.WhenAll(
-                orangeRocklandService.Authentication.GetAuthToken(),
+                options.SkipUtility ? Task.CompletedTask : orangeRocklandService.Authentication.GetAuthToken(),
                 powerGuideService.Authentication.GetAuthToken());
         }
 
@@ -119,7 +175,7 @@ namespace DadsEnergyReporter.Service
             return daysSinceLastReportGenerated < 28;
         }
 
-        internal bool HaveAlreadySentReport(Instant mostRecentReportBillingDate, Report report)
+        internal bool HaveAlreadySentReport(Instant mostRecentReportBillingDate, SolarAndUtilityReport report)
         {
             return !(mostRecentReportBillingDate.InZone(reportTimeZone).Date < report.BillingDate);
         }
@@ -133,6 +189,34 @@ namespace DadsEnergyReporter.Service
             catch (SettingsException e)
             {
                 LOGGER.Error($"Invalid setting: {e.SettingsKey} = {e.InvalidValue}, {e.Message}.");
+                throw;
+            }
+        }
+
+        private void ValidateOptions(Options opts)
+        {
+            try
+            {
+                if (!opts.SkipUtility)
+                {
+                    return;
+                }
+                else if (opts.StartDate == default)
+                {
+                    throw new Exception("--start-date option must have a value specified when --skip-utility is specified");
+                }
+                else if (opts.EndDate == default)
+                {
+                    throw new Exception("--end-date option must have a value specified when --skip-utility is specified");
+                }
+                else if (opts.EndDate <= opts.StartDate)
+                {
+                    throw new Exception("Value of --end-date must be aftert value of --start-date");
+                }
+            }
+            catch (Exception e)
+            {
+                LOGGER.Error(e, $"Invalid option passed on the command line");
                 throw;
             }
         }

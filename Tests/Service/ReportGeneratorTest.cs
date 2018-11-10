@@ -51,7 +51,7 @@ namespace DadsEnergyReporter.Service
             };
             A.CallTo(() => powerGuideService.Measurement.Measure(A<DateInterval>._)).Returns(measurement);
 
-            Report report = await reportGenerator.GenerateReport();
+            SolarAndUtilityReport report = await reportGenerator.GenerateReport();
 
             report.PowerGenerated.Should().Be(3000);
             report.PowerBoughtOrSold.Should().Be(200);

@@ -39,13 +39,13 @@ namespace DadsEnergyReporter.Service
         public async void SendEmail()
         {
             var recipients = new List<string> { "ben@aldaviva.com" };
-            var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 0, 2000);
+            var report = new SolarAndUtilityReport(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 0, 2000);
 
             var expectedMessage = new MimeMessage
             {
                 Subject = "expected message"
             };
-            A.CallTo(() => reportFormatter.FormatReport(A<Report>._)).Returns(expectedMessage);
+            A.CallTo(() => reportFormatter.FormatReport(A<SolarAndUtilityReport>._)).Returns(expectedMessage);
 
             await emailSender.SendEmail(report, recipients);
 
@@ -65,7 +65,7 @@ namespace DadsEnergyReporter.Service
                 .ThrowsAsync(new IOException());
 
             var recipients = new List<string> { "ben@aldaviva.com" };
-            var report = new Report(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 0, 2000);
+            var report = new SolarAndUtilityReport(new DateInterval(new LocalDate(2017, 07, 17), new LocalDate(2017, 08, 16)), 100, 0, 2000);
 
             Func<Task> thrower = async () => await emailSender.SendEmail(report, recipients);
 

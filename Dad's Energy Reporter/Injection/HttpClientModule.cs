@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Security.Authentication;
 using Autofac;
 using DadsEnergyReporter.Data;
 
@@ -18,7 +19,10 @@ namespace DadsEnergyReporter.Injection
                 return new HttpClientHandler
                 {
                     CookieContainer = c.Resolve<CookieContainer>(),
-                    Proxy = string.IsNullOrWhiteSpace(settings.HttpProxy) ? null : new WebProxy(settings.HttpProxy)
+                    Proxy = string.IsNullOrWhiteSpace(settings.HttpProxy) ? null : new WebProxy(settings.HttpProxy),
+
+                    // Use TLS1.2, otherwise SolarCity requests fail with "System.Net.WebException: The request was aborted: Could not create SSL/TLS secure channel."
+                    SslProtocols = SslProtocols.Tls12
                 };
             }).As<HttpMessageHandler>().SingleInstance();
 
