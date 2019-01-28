@@ -68,7 +68,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
             {
                 { "login", true },
                 { "newDevice", false },
-                { "authRedirectUrl", "https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=***REMOVED***" },
+                { "authRedirectUrl", "https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=abcdefg" },
                 { "noMfa", false },
                 { "legacyLockout", false }
             };
@@ -98,7 +98,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
             ))).MustHaveHappened();
             A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>.That.Matches(message =>
                 message.Method == HttpMethod.Get
-                && message.RequestUri.ToString().Equals("https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=***REMOVED***")
+                && message.RequestUri.ToString().Equals("https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=abcdefg")
             ))).MustHaveHappened();
             A.CallTo(() => httpMessageHander.SendAsync(A<HttpRequestMessage>.That.Matches(message =>
                 message.Method == HttpMethod.Get
@@ -121,7 +121,7 @@ namespace DadsEnergyReporter.Remote.OrangeRockland.Client
             {
                 { "login", true },
                 { "newDevice", false },
-                { "authRedirectUrl", "https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=***REMOVED***" },
+                { "authRedirectUrl", "https://apps.coned.com/ORMyAccount/Forms/DcxLogin.aspx?params=abcdefg" },
                 { "noMfa", false },
                 { "legacyLockout", false }
             });
