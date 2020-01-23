@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace DadsEnergyReporter.Exceptions
-{
+namespace DadsEnergyReporter.Exceptions {
+
     [Serializable]
-    internal class EmailException : Exception
-    {
-        public EmailException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    internal class EmailException: Exception {
+
+        public EmailException(string message, Exception innerException): base(message, innerException) { }
+
     }
+
 }

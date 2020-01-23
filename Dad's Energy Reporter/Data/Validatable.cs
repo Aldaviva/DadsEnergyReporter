@@ -1,7 +1,9 @@
-﻿namespace DadsEnergyReporter.Data
-{
-    public interface Validatable
-    {
-        void Validate();
+﻿namespace DadsEnergyReporter.Data {
+
+    public interface Validatable {
+
+        void validate();
+
     }
+
 }

@@ -2,14 +2,13 @@
 using NodaTime;
 using NodaTime.Serialization.JsonNet;
 
-namespace DadsEnergyReporter.Data.Marshal
-{
-    internal static class JsonSerializerConfigurer
-    {
+namespace DadsEnergyReporter.Data.Marshal {
+
+    internal static class JsonSerializerConfigurer {
+
         private static readonly IDateTimeZoneProvider DATE_TIME_ZONE_PROVIDER = DateTimeZoneProviders.Tzdb;
 
-        public static void ConfigureDefault()
-        {
+        public static void configureDefault() {
             JsonConvert.DefaultSettings = () =>
                 new JsonSerializerSettings()
                     .ConfigureForNodaTime(DATE_TIME_ZONE_PROVIDER);
@@ -19,5 +18,7 @@ namespace DadsEnergyReporter.Data.Marshal
         {
             jsonSerializer.ConfigureForNodaTime(DATE_TIME_ZONE_PROVIDER);
         }*/
+
     }
+
 }

@@ -190,9 +190,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Dad%27s Energy Reporter\Dad%27s Energy Reporter.csproj">
       <Project>{d47af107-72c2-473b-90d6-dbbd8e75de31}</Project>
       <Name>Dad%27s Energy Reporter</Name>

@@ -1,78 +1,86 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using NodaTime;
+
+// ReSharper disable CollectionNeverUpdated.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable ClassNeverInstantiated.Global
 
-namespace DadsEnergyReporter.Data.Marshal
-{
-    public class Measurement
-    {
-        public LocalDateTime Timestamp { get; set; }
-        public double CumulativekWh { get; set; }
+namespace DadsEnergyReporter.Data.Marshal {
+
+    public class Measurement {
+
+        public LocalDateTime timestamp { get; set; }
+
+        public double cumulativekWh { get; set; }
+
         //public double EnergyInIntervalkWh { get; set; } //is sometimes null and sometimes negative, so ignore and use CumulativekWh instead
-        public DataStatus DataStatus { get; set; }
+        public DataStatus dataStatus { get; set; }
+
     }
 
-    public class MeasurementsResponse
-    {
-        public List<Measurement> Measurements { get; set; }
-        public double TotalEnergyInIntervalkWh { get; set; }
+    public class MeasurementsResponse {
+
+        public List<Measurement> measurements { get; set; }
+        public double totalEnergyInIntervalkWh { get; set; }
+
     }
 
-    public class Installation
-    {
-        public Guid Guid { get; set; }
+    public class Installation {
+
+        public Guid guid { get; set; }
 //        public double SystemSize { get; set; }
 //        public string JobId { get; set; }
+
     }
 
-    public class InstallationsResponse
-    {
+    public class InstallationsResponse {
+
 //        public int ResultTotal { get; set; }
-        public List<Installation> Data { get; set; }
+        public List<Installation> data { get; set; }
+
     }
 
-    public struct PreLogInData
-    {
-        public string CsrfToken;
-        public Uri LogInUri;
+    public struct PreLogInData {
+
+        public string csrfToken;
+        public Uri logInUri;
+
     }
 
-    public class PowerGuideAuthToken
-    {
-        public string FedAuth { get; }
-        
-        public PowerGuideAuthToken(string fedAuth)
-        {
-            FedAuth = fedAuth;
+    public class PowerGuideAuthToken {
+
+        public string fedAuth { get; }
+
+        public PowerGuideAuthToken(string fedAuth) {
+            this.fedAuth = fedAuth;
         }
 
-        private bool Equals(PowerGuideAuthToken other)
-        {
-            return string.Equals(FedAuth, other.FedAuth);
+        private bool @equals(PowerGuideAuthToken other) {
+            return string.Equals(fedAuth, other.fedAuth);
         }
 
-        public override bool Equals(object obj)
-        {
+        public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((PowerGuideAuthToken) obj);
+            return obj.GetType() == GetType() && @equals((PowerGuideAuthToken) obj);
         }
 
-        public override int GetHashCode()
-        {
-            return FedAuth != null ? FedAuth.GetHashCode() : 0;
+        public override int GetHashCode() {
+            return fedAuth != null ? fedAuth.GetHashCode() : 0;
         }
 
-        public override string ToString()
-        {
-            return $"{nameof(FedAuth)}: {FedAuth}";
+        public override string ToString() {
+            return $"{nameof(fedAuth)}: {fedAuth}";
         }
+
     }
 
-    public enum DataStatus
-    {
-        Validated
+    public enum DataStatus {
+
+        VALIDATED
+
     }
+
 }

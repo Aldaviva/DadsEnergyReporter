@@ -2,59 +2,48 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace DadsEnergyReporter.Data.Marshal
-{
-    public class JsonSettingsManager<T> where T : Validatable, new()
-    {
-        private readonly JsonSerializer serializer = new JsonSerializer
-        {
+namespace DadsEnergyReporter.Data.Marshal {
+
+    public class JsonSettingsManager<T> where T: Validatable, new() {
+
+        private readonly JsonSerializer serializer = new JsonSerializer {
             Formatting = Formatting.Indented,
             DateFormatHandling = DateFormatHandling.IsoDateFormat,
             MissingMemberHandling = MissingMemberHandling.Ignore
         };
 
         private T _cache;
-        private string filename;
+        private string _filename;
 
-        internal string Filename
-        {
-            get => filename;
-            set => filename = Environment.ExpandEnvironmentVariables(value);
+        internal string filename {
+            get => _filename;
+            set => _filename = Environment.ExpandEnvironmentVariables(value);
         }
 
-        public T Get()
-        {
-            if (_cache == null)
-            {
+        public T get() {
+            if (_cache == null) {
                 _cache = new T();
-                Reload(_cache);
+                reload(_cache);
             }
 
             return _cache;
         }
 
-        public void Reload(T settings)
-        {
-            try
-            {
-                using (var jsonTextReader = new JsonTextReader(File.OpenText(Filename)))
-                {
-                    serializer.Populate(jsonTextReader, settings);
+        public void reload(T settings) {
+            try {
+                using var jsonTextReader = new JsonTextReader(File.OpenText(filename));
+                serializer.Populate(jsonTextReader, settings);
 //                settings.Validate();
-                }
-            }
-            catch (FileNotFoundException)
-            {
+            } catch (FileNotFoundException) {
                 JsonConvert.PopulateObject("{}", settings);
             }
         }
 
-        public void Save(T settings)
-        {
-            using (var jsonTextWriter = new JsonTextWriter(File.CreateText(Filename)))
-            {
-                serializer.Serialize(jsonTextWriter, settings);
-            }
+        public void save(T settings) {
+            using var jsonTextWriter = new JsonTextWriter(File.CreateText(filename));
+            serializer.Serialize(jsonTextWriter, settings);
         }
+
     }
+
 }

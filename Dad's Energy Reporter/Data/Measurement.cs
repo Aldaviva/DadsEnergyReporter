@@ -1,7 +1,9 @@
-﻿namespace DadsEnergyReporter.Data
-{
-    public class Measurement
-    {
-        public double GeneratedKilowattHours { get; set; }
+﻿namespace DadsEnergyReporter.Data {
+
+    public class Measurement {
+
+        public double generatedKilowattHours { get; set; }
+
     }
+
 }

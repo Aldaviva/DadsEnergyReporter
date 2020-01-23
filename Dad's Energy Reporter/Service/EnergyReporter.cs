@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
 using DadsEnergyReporter.Data;
@@ -7,218 +6,179 @@ using DadsEnergyReporter.Entry;
 using DadsEnergyReporter.Exceptions;
 using DadsEnergyReporter.Injection;
 using DadsEnergyReporter.Remote.OrangeRockland.Service;
-using DadsEnergyReporter.Remote.PowerGuide.Service;
+using DadsEnergyReporter.Remote.Solar.PowerGuide.Service;
+using DadsEnergyReporter.Remote.Solar.Tesla.Service;
 using NLog;
 using NodaTime;
 
-namespace DadsEnergyReporter.Service
-{
-    public interface EnergyReporter
-    {
-        Task<int> SendSolarReport();
-        Task<int> SendSolarAndUtilityReport();
+namespace DadsEnergyReporter.Service {
+
+    public interface EnergyReporter {
+
+        Task<int> sendSolarReport();
+        Task<int> sendSolarAndUtilityReport();
+
     }
 
     [Component]
-    internal class EnergyReporterImpl : EnergyReporter
-    {
+    internal class EnergyReporterImpl: EnergyReporter {
+
         private static readonly Logger LOGGER = LogManager.GetCurrentClassLogger();
 
         private readonly ReportGenerator reportGenerator;
         private readonly EmailSender emailSender;
-        private readonly PowerGuideService powerGuideService;
+        private readonly OwnerApiService ownerApiService;
         private readonly OrangeRocklandService orangeRocklandService;
         private readonly DateTimeZone reportTimeZone;
         private readonly Settings settings;
         private readonly Options options;
 
-        public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender, PowerGuideService powerGuideService,
-            OrangeRocklandService orangeRocklandService, DateTimeZone reportTimeZone, Settings settings, Options options)
-        {
+        public EnergyReporterImpl(ReportGenerator reportGenerator, EmailSender emailSender, OwnerApiService ownerApiService,
+            OrangeRocklandService orangeRocklandService, DateTimeZone reportTimeZone, Settings settings, Options options) {
             this.reportGenerator = reportGenerator;
             this.emailSender = emailSender;
-            this.powerGuideService = powerGuideService;
+            this.ownerApiService = ownerApiService;
             this.orangeRocklandService = orangeRocklandService;
             this.reportTimeZone = reportTimeZone;
             this.settings = settings;
             this.options = options;
         }
 
-        public async Task<int> SendSolarReport()
-        {
+        public async Task<int> sendSolarReport() {
             LOGGER.Info("Dad's Energy Reporter {0}", Assembly.GetExecutingAssembly().GetName().Version);
 
             LOGGER.Debug("Validating options");
-            try
-            {
-                ValidateOptions(options);
-            }
-            catch (Exception)
-            {
+            try {
+                validateOptions(options);
+            } catch (Exception) {
                 return 1;
             }
 
             LOGGER.Debug("Validating settings");
-            try
-            {
-                ValidateSettings(settings);
-            }
-            catch (SettingsException)
-            {
+            try {
+                validateSettings(settings);
+            } catch (SettingsException) {
                 return 1;
             }
 
-            try
-            {
+            try {
                 LOGGER.Info("Logging in...");
-                await LogIn();
+                await logIn();
                 LOGGER.Info("Logged in.");
 
                 SolarReport report =
-                    await reportGenerator.GenerateSolarReport(new DateInterval(options.StartDate, options.EndDate));
+                    await reportGenerator.generateSolarReport(new DateInterval(options.startDate, options.endDate));
 
-                Console.WriteLine($"{report.PowerGenerated:N2}");
+                Console.WriteLine($"{report.powerGenerated:N2}");
 
                 return 0;
-            }
-            catch (Exception e)
-            {
-                LOGGER.Error(e, "Aborted report generation due to exception "+e);
+            } catch (Exception e) {
+                LOGGER.Error(e, "Aborted report generation due to exception " + e);
                 return 1;
-            }
-            finally
-            {
+            } finally {
                 LOGGER.Info("Logging out");
-                await powerGuideService.Authentication.LogOut();
+                await ownerApiService.authentication.logOut();
                 LOGGER.Info("Done");
             }
         }
 
-
-        public async Task<int> SendSolarAndUtilityReport()
-        {
+        public async Task<int> sendSolarAndUtilityReport() {
             LOGGER.Info("Dad's Energy Reporter {0}", Assembly.GetExecutingAssembly().GetName().Version);
 
             LOGGER.Debug("Validating settings");
-            try
-            {
-                ValidateSettings(settings);
-            }
-            catch (SettingsException)
-            {
+            try {
+                validateSettings(settings);
+            } catch (SettingsException) {
                 return 1;
             }
 
-            Instant mostRecentReportBillingDate = Instant.FromDateTimeUtc(settings.MostRecentReportBillingDate);
+            Instant mostRecentReportBillingDate = Instant.FromDateTimeUtc(settings.mostRecentReportBillingDate);
 
-            if (HaveSentReportTooRecently(mostRecentReportBillingDate))
-            {
+            if (haveSentReportTooRecently(mostRecentReportBillingDate)) {
                 LOGGER.Info(
                     "Report was already created and sent for billing cycle ending on {0}, which is too recent. Not checking again now.",
                     mostRecentReportBillingDate.InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).Date);
                 return 0;
             }
 
-            try
-            {
+            try {
                 LOGGER.Info("Logging in...");
-                await LogIn();
+                await logIn();
                 LOGGER.Info("Logged in.");
 
-                SolarAndUtilityReport report = await reportGenerator.GenerateReport();
+                SolarAndUtilityReport report = await reportGenerator.generateReport();
 
-                if (HaveAlreadySentReport(mostRecentReportBillingDate, report))
-                {
+                if (haveAlreadySentReport(mostRecentReportBillingDate, report)) {
                     LOGGER.Info("Report has already been sent for billing cycle ending on {0}, not sending again.",
-                        report.BillingDate);
+                        report.billingDate);
                     return 0;
                 }
 
                 LOGGER.Info("Sending email report");
-                await emailSender.SendEmail(report, settings.ReportRecipientEmails);
-                settings.MostRecentReportBillingDate =
-                    report.BillingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToDateTimeUtc();
-                settings.Save();
+                await emailSender.sendEmail(report, settings.reportRecipientEmails);
+                settings.mostRecentReportBillingDate =
+                    report.billingDate.AtStartOfDayInZone(reportTimeZone).ToInstant().ToDateTimeUtc();
+                settings.save();
                 return 0;
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 LOGGER.Error(e, "Aborted report generation due to exception");
                 return 1;
-            }
-            finally
-            {
+            } finally {
                 LOGGER.Info("Logging out");
                 Task.WaitAll(
-                    powerGuideService.Authentication.LogOut(),
-                    options.SkipUtility ? Task.CompletedTask : orangeRocklandService.Authentication.LogOut());
+                    ownerApiService.authentication.logOut(),
+                    options.skipUtility ? Task.CompletedTask : orangeRocklandService.authentication.logOut());
                 LOGGER.Info("Done");
             }
         }
 
-        internal Task LogIn()
-        {
-            orangeRocklandService.Authentication.Username = settings.OrangeRocklandUsername;
-            orangeRocklandService.Authentication.Password = settings.OrangeRocklandPassword;
-            powerGuideService.Authentication.Username = settings.SolarCityUsername;
-            powerGuideService.Authentication.Password = settings.SolarCityPassword;
+        internal Task logIn() {
+            orangeRocklandService.authentication.username = settings.orangeRocklandUsername;
+            orangeRocklandService.authentication.password = settings.orangeRocklandPassword;
+            ownerApiService.authentication.username = settings.solarCityUsername;
+            ownerApiService.authentication.password = settings.solarCityPassword;
 
             return Task.WhenAll(
-                options.SkipUtility ? Task.CompletedTask : orangeRocklandService.Authentication.GetAuthToken(),
-                powerGuideService.Authentication.GetAuthToken());
+                options.skipUtility ? Task.CompletedTask : orangeRocklandService.authentication.getAuthToken(),
+                ownerApiService.authentication.getAuthToken());
         }
 
-        internal bool HaveSentReportTooRecently(Instant mostRecentReportBillingDate)
-        {
+        internal bool haveSentReportTooRecently(Instant mostRecentReportBillingDate) {
             double daysSinceLastReportGenerated =
                 new Interval(mostRecentReportBillingDate, SystemClock.Instance.GetCurrentInstant()).Duration.TotalDays;
             return daysSinceLastReportGenerated < 28;
         }
 
-        internal bool HaveAlreadySentReport(Instant mostRecentReportBillingDate, SolarAndUtilityReport report)
-        {
-            return !(mostRecentReportBillingDate.InZone(reportTimeZone).Date < report.BillingDate);
+        internal bool haveAlreadySentReport(Instant mostRecentReportBillingDate, SolarAndUtilityReport report) {
+            return !(mostRecentReportBillingDate.InZone(reportTimeZone).Date < report.billingDate);
         }
 
-        private static void ValidateSettings(Settings settings)
-        {
-            try
-            {
-                settings.Validate();
-            }
-            catch (SettingsException e)
-            {
-                LOGGER.Error($"Invalid setting: {e.SettingsKey} = {e.InvalidValue}, {e.Message}.");
+        private static void validateSettings(Settings settings) {
+            try {
+                settings.validate();
+            } catch (SettingsException e) {
+                LOGGER.Error($"Invalid setting: {e.settingsKey} = {e.invalidValue}, {e.Message}.");
                 throw;
             }
         }
 
-        private void ValidateOptions(Options opts)
-        {
-            try
-            {
-                if (!opts.SkipUtility)
-                {
+        private void validateOptions(Options opts) {
+            try {
+                if (!opts.skipUtility) {
                     return;
-                }
-                else if (opts.StartDate == default)
-                {
+                } else if (opts.startDate == default) {
                     throw new Exception("--start-date option must have a value specified when --skip-utility is specified");
-                }
-                else if (opts.EndDate == default)
-                {
+                } else if (opts.endDate == default) {
                     throw new Exception("--end-date option must have a value specified when --skip-utility is specified");
-                }
-                else if (opts.EndDate <= opts.StartDate)
-                {
+                } else if (opts.endDate <= opts.startDate) {
                     throw new Exception("Value of --end-date must be aftert value of --start-date");
                 }
-            }
-            catch (Exception e)
-            {
-                LOGGER.Error(e, $"Invalid option passed on the command line");
+            } catch (Exception e) {
+                LOGGER.Error(e, "Invalid option passed on the command line");
                 throw;
             }
         }
+
     }
+
 }

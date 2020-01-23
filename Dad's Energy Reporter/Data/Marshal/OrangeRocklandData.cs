@@ -1,12 +1,13 @@
-﻿namespace DadsEnergyReporter.Data.Marshal
-{
-    public class OrangeRocklandAuthToken
-    {
-        public string LogInCookie { get; set; }
+﻿namespace DadsEnergyReporter.Data.Marshal {
 
-        public override string ToString()
-        {
-            return $"{nameof(LogInCookie)}: {LogInCookie}";
+    public class OrangeRocklandAuthToken {
+
+        public string logInCookie { get; set; }
+
+        public override string ToString() {
+            return $"{nameof(logInCookie)}: {logInCookie}";
         }
+
     }
+
 }
